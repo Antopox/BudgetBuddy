@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">BudgetBuddy</string>
+    <string name="log_in">Log in</string>
+    <string name="sign_up">Sign up</string>
+    <string name="email">E-mail</string>
+    <string name="password">Password</string>
+</resources>
