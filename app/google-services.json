@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "402318662717",
+    "firebase_url": "https://budget-buddy-b40f4-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "budget-buddy-b40f4",
+    "storage_bucket": "budget-buddy-b40f4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:402318662717:android:9c940d796b7a4bf0209e54",
+        "android_client_info": {
+          "package_name": "com.example.budgetbuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "402318662717-ps1dmphb9gh1evnf1dkv3ehh2rpc9llt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9NQURaxVVpsdrjrKzvmNMaooqhMQnswo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "402318662717-ps1dmphb9gh1evnf1dkv3ehh2rpc9llt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
