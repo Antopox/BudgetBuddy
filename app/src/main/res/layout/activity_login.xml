@@ -8,7 +8,7 @@
     tools:context=".controllers.LoginActivity">
 
     <EditText
-        android:id="@+id/etUserEmail"
+        android:id="@+id/etLoginEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="45dp"
@@ -18,10 +18,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/logInTittle" />
 
     <EditText
-        android:id="@+id/etUserPass"
+        android:id="@+id/etLoginPass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="26dp"
@@ -31,14 +31,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etUserEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/etLoginEmail" />
 
     <Button
-        android:id="@+id/btSignUp"
+        android:id="@+id/btSignIn"
         android:layout_width="200dp"
         android:layout_height="46dp"
         android:layout_marginTop="12dp"
-        android:text="@string/sign_up"
+        android:text="@string/sign_in"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,15 +53,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etUserPass" />
-
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="129dp"
-        tools:layout_editor_absoluteY="16dp"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintTop_toBottomOf="@+id/etLoginPass" />
 
     <Button
         android:id="@+id/btGoogleLogin"
@@ -71,7 +63,7 @@
         android:text="google"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btSignUp"
+        app:layout_constraintTop_toBottomOf="@+id/btSignIn"
         app:layout_constraintVertical_bias="0.19" />
 
     <Button
@@ -82,7 +74,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btTwitterLogin"
         app:layout_constraintStart_toEndOf="@+id/btGoogleLogin"
-        app:layout_constraintTop_toBottomOf="@+id/btSignUp"
+        app:layout_constraintTop_toBottomOf="@+id/btSignIn"
         app:layout_constraintVertical_bias="0.19999999" />
 
     <Button
@@ -93,19 +85,30 @@
         android:text="X"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btSignUp"
+        app:layout_constraintTop_toBottomOf="@+id/btSignIn"
         app:layout_constraintVertical_bias="0.19" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/logInTittle"
         android:layout_width="159dp"
         android:layout_height="61dp"
-        android:layout_marginTop="17dp"
+        android:layout_marginTop="36dp"
         android:gravity="center"
         android:text="@string/log_in"
         android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButton" />
+        app:layout_constraintTop_toBottomOf="@+id/logInLogo" />
+
+    <ImageView
+        android:id="@+id/logInLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
 </androidx.constraintlayout.widget.ConstraintLayout>
