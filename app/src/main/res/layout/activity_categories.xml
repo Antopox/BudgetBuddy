@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/main_categories"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".controllers.MainActivity">
+    tools:context=".controllers.CategoriesActivity">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -16,38 +16,26 @@
         >
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/mainToolbar"
+            android:id="@+id/categoriesToolbar"
             android:layout_width="match_parent"
             android:layout_height="65dp"
             android:animateLayoutChanges="false"
             android:background="@color/light_blue"
             android:gravity="bottom"
             app:buttonGravity="bottom"
-            app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:title="@string/categories"
             app:titleCentered="true" />
 
 
 
-        <FrameLayout
-            android:id="@+id/mainFrameLayout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
 
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottomNavigationView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            app:menu="@menu/menu_bottom"></com.google.android.material.bottomnavigation.BottomNavigationView>
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:id="@+id/nav_view"
+        android:id="@+id/nav_view_categories"
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/menu_nav_drawer"

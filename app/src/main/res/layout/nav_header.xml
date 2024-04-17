@@ -9,21 +9,26 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
+        android:id="@+id/imgDisplay"
         android:layout_width="92dp"
         android:layout_height="90dp"
         android:src="@drawable/ic_launcher_foreground" />
 
     <TextView
+        android:id="@+id/txtDisplayName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="BudgetBuddy"
-        android:textStyle="bold"/>
+        android:layout_marginStart="20dp"
+        android:text="nombreUser"
+        android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/txtDisplayEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="hola"
-        android:textSize="14dp"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="email"
+        android:textSize="14dp" />
 
 </LinearLayout>
