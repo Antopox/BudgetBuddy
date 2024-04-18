@@ -32,19 +32,10 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        /*
-        if (session() == 0){
-            var i = Intent(this, MainActivity::class.java)
-            startActivity(i)
-        }*/
-
         enableEdgeToEdge()
         setContentView(R.layout.activity_login)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        session()
+
         txtEmail = findViewById(R.id.etLoginEmail)
         txtPass = findViewById(R.id.etLoginPass)
         btLogin = findViewById(R.id.btLogIn)
@@ -54,13 +45,11 @@ class LoginActivity : AppCompatActivity() {
         btXlogin = findViewById(R.id.btTwitterLogin)
 
         auth = FirebaseAuth.getInstance()
-
         btLogin.setOnClickListener {
             if (checkValues()){
                 auth.signInWithEmailAndPassword(txtEmail.text.toString().trim(), txtPass.text.toString().trim()).addOnSuccessListener {
                     Utils().toast(applicationContext, getString(R.string.login_success))
-                    var i = Intent(this, MainActivity::class.java)
-                    startActivity(i)
+                    toMainActivity()
                     this.finish()
                 }.addOnFailureListener {
                     Utils().toast(applicationContext, it.message.toString())
@@ -88,11 +77,7 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        if (session() == 0){
-            var i = Intent(this, MainActivity::class.java)
-            startActivity(i)
-            this.finish()
-        }
+        session()
     }
 
     private fun checkValues(): Boolean{
@@ -108,12 +93,10 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun session(): Int{
-        var user = Utils().getUserPreferences(applicationContext)
-        if (user.userUID == ""){
-            return -1
-        }else{
-            return 0
+    private fun session(){
+        if (Utils().getIsSignedIn(applicationContext)){
+            toMainActivity()
+            this.finish()
         }
     }
 
@@ -128,10 +111,14 @@ class LoginActivity : AppCompatActivity() {
                 val credentials = GoogleAuthProvider.getCredential(account.idToken, null)
                 auth.signInWithCredential(credentials)
 
-                val i = Intent(this, MainActivity::class.java)
-                startActivity(i)
+                toMainActivity()
             }
 
         }
+    }
+
+    private fun toMainActivity(){
+        val i = Intent(this, MainActivity::class.java)
+        startActivity(i)
     }
 }

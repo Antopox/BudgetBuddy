@@ -14,34 +14,22 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
 import com.example.budgetbuddy.R
-import com.example.budgetbuddy.databinding.ActivityMainBinding
-import com.example.budgetbuddy.fragments.BalanceFragment
-import com.example.budgetbuddy.fragments.CalendarFragment
-import com.example.budgetbuddy.fragments.RecordFragment
-import com.example.budgetbuddy.utils.FirebaseRealtime
 import com.example.budgetbuddy.utils.Utils
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener{
+class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var binding: ActivityMainBinding
     private lateinit var drawerLayout: DrawerLayout
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_profile)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        drawerLayout = findViewById(R.id.main)
+        drawerLayout = findViewById(R.id.main_profile)
 
         var currentUser = FirebaseAuth.getInstance().currentUser
-        if (!Utils().getIsSignedIn(applicationContext)){
-            Utils().createUserPreferences(applicationContext, currentUser!!)
-        }
 
         drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
@@ -66,11 +54,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         })
 
-        val toolbar = findViewById<Toolbar>(R.id.mainToolbar)
+        val toolbar = findViewById<Toolbar>(R.id.profileToolbar)
         setSupportActionBar(toolbar)
-        supportActionBar?.title = getString(R.string.balance)
 
-        val navigationView = findViewById<NavigationView>(R.id.nav_view)
+        val navigationView = findViewById<NavigationView>(R.id.nav_view_profile)
         navigationView.setNavigationItemSelectedListener(this)
 
         val toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav)
@@ -78,48 +65,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         if (savedInstanceState == null){
-            replaceFragment(BalanceFragment())
             navigationView.setCheckedItem(R.id.mb_home)
         }
-
-
-        binding.bottomNavigationView.setOnItemSelectedListener {
-            when (it.itemId){
-                R.id.mb_balance -> {
-                    replaceFragment(BalanceFragment())
-                    supportActionBar?.title = getString(R.string.balance)
-                }
-                R.id.mb_record -> {
-                    replaceFragment(RecordFragment())
-                    supportActionBar?.title = getString(R.string.record)
-                }
-                R.id.mb_calendar -> {
-                    replaceFragment(CalendarFragment())
-                    supportActionBar?.title = getString(R.string.calendar)
-                }
-
-                else ->{}
-            }
-            true
-        }
-    }
-
-    private fun replaceFragment(fragment: Fragment){
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.mainFrameLayout, fragment)
-        fragmentTransaction.commit()
     }
 
     override fun onNavigationItemSelected(p0: MenuItem): Boolean {
         when(p0.itemId){
-            R.id.mb_home -> drawerLayout.closeDrawer(GravityCompat.START)
+            R.id.mb_home -> changeActivity(MainActivity())
 
             R.id.mb_categories -> changeActivity(CategoriesActivity())
 
             R.id.mb_settings -> changeActivity(SettingsActivity())
 
-            R.id.mb_profile -> changeActivity(ProfileActivity())
+            R.id.mb_profile -> drawerLayout.closeDrawer(GravityCompat.START)
 
             R.id.mb_logout-> closeSession()
         }

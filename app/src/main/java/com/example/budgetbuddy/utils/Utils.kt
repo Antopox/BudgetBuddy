@@ -20,6 +20,7 @@ class Utils {
         prefs.putString("name", user?.displayName)
         prefs.putString("email", user?.email)
         prefs.putString("UID", user?.uid)
+        prefs.putBoolean("isSignedIn", true)
         prefs.apply()
     }
 
@@ -33,5 +34,21 @@ class Utils {
         user.email = prefs.getString("email", "").toString()
 
         return user
+    }
+
+    fun deleteUserPreferences(c: Context){
+        val prefs = c.getSharedPreferences(c.getString(R.string.prefs_file), Context.MODE_PRIVATE).edit()
+        prefs.clear()
+        prefs.apply()
+    }
+
+    fun getIsSignedIn(c: Context): Boolean{
+        var isSigned = false
+
+        val prefs =
+            c.getSharedPreferences(c.getString(R.string.prefs_file), Context.MODE_PRIVATE)
+        isSigned = prefs.getBoolean("isSignedIn", false)
+
+        return isSigned
     }
 }
