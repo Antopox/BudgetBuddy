@@ -28,6 +28,6 @@ class SplashScreenActivity: AppCompatActivity() {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish() // Cerrar la actividad actual para que no se pueda volver atrás
-        }, 5000)
+        }, 3000)
     }
 }

@@ -1,17 +1,18 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.BudgetBuddy" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/light_blue</item>
-        <item name="colorPrimaryVariant">@color/light_blue</item>
-        <item name="windowActionBar">false</item>
-    </style>
-    <style name="Base.Theme.BottomNavigation" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/light_blue</item>
-        <item name="colorPrimaryVariant">@color/light_blue</item>
-        <item name="android:statusBarColor">@color/light_blue</item>
+        <item name="colorPrimary">@color/dark_grey</item>
+        <item name="colorPrimaryVariant">@color/black</item>
+        <item name="colorSecondary">@color/light_blue</item>
+
     </style>
 
-    <style name="Theme.BottomNavigation" parent="Base.Theme.BottomNavigation"/>
+    <style name="Theme.Button" parent="Base.Theme.BudgetBuddy">
+        <item name="android:textColor">@color/white</item>
+        <item name="background">@color/dark_grey</item>
+        <item name="iconTint">@color/white</item>
+    </style>
+
 
     <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="android:color">@color/black</item>

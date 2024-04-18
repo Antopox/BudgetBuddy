@@ -14,6 +14,9 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.request.RequestOptions
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.utils.Utils
 import com.google.android.material.navigation.NavigationView
@@ -42,7 +45,16 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 var userimg = drawerView.findViewById<ImageView>(R.id.imgDisplay)
                 txtDisplayName.text = currentUser?.displayName
                 txtDisplayEmail.text = currentUser?.email
-                userimg.setImageURI(currentUser?.photoUrl)
+
+                val photoUrl: String = currentUser?.photoUrl.toString()
+                if (!photoUrl.isNullOrEmpty()) {
+                    Glide.with(applicationContext)
+                        .load(photoUrl)
+                        .placeholder(R.drawable.iconbg) // Imagen de marcador de posición mientras carga
+                        .apply(RequestOptions().transform(CircleCrop()))
+                        .error(R.drawable.iconbg) // Imagen de marcador de posición en caso de error
+                        .into(userimg)
+                }
             }
 
             override fun onDrawerClosed(drawerView: View) {

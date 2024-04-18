@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/light_blue"
     tools:context=".controllers.LoginActivity">
 
     <EditText
@@ -35,11 +36,12 @@
 
     <Button
         android:id="@+id/btSignIn"
+        style="@style/Theme.Button"
         android:layout_width="200dp"
         android:layout_height="46dp"
         android:layout_marginTop="12dp"
-        android:backgroundTint="@color/light_blue"
         android:text="@string/sign_in"
+        android:theme="@style/Theme.Button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,11 +49,12 @@
 
     <Button
         android:id="@+id/btLogIn"
+        style="@style/Theme.Button"
         android:layout_width="200dp"
         android:layout_height="48dp"
         android:layout_marginTop="20dp"
-        android:backgroundTint="@color/light_blue"
         android:text="@string/log_in"
+        android:theme="@style/Theme.Button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,11 +62,16 @@
 
     <Button
         android:id="@+id/btGoogleLogin"
+        style="@style/Theme.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
-        android:backgroundTint="@color/light_blue"
-        android:text="google"
+        android:backgroundTintMode="add"
+        android:gravity="center"
+        app:icon="@drawable/googleg_standard_color_18"
+        app:iconGravity="textEnd"
+        app:iconPadding="2dp"
+        app:iconSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btSignIn"
@@ -71,9 +79,9 @@
 
     <Button
         android:id="@+id/btFacebookLogin"
+        style="@style/Theme.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/light_blue"
         android:text="Facebook"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btTwitterLogin"
@@ -83,11 +91,12 @@
 
     <Button
         android:id="@+id/btTwitterLogin"
+        style="@style/Theme.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="50dp"
-        android:backgroundTint="@color/light_blue"
         android:text="X"
+        android:theme="@style/Theme.Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btSignIn"
@@ -108,12 +117,12 @@
 
     <ImageView
         android:id="@+id/logInLogo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_width="260dp"
+        android:layout_height="215dp"
+        android:layout_marginTop="65dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:srcCompat="@drawable/budgetbuddyiconbyw" />
 </androidx.constraintlayout.widget.ConstraintLayout>
