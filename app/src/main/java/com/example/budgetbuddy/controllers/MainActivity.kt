@@ -1,6 +1,7 @@
 package com.example.budgetbuddy.controllers
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -15,6 +16,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.request.RequestOptions
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.databinding.ActivityMainBinding
 import com.example.budgetbuddy.fragments.BalanceFragment
@@ -39,8 +43,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawerLayout = findViewById(R.id.main)
 
         var currentUser = FirebaseAuth.getInstance().currentUser
-        if (!Utils().getIsSignedIn(applicationContext)){
-            Utils().createUserPreferences(applicationContext, currentUser!!)
+        if (!Utils().getIsSignedIn(applicationContext) && currentUser != null){
+            Utils().createUserPreferences(applicationContext, currentUser)
         }
 
         drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
@@ -54,7 +58,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 var userimg = drawerView.findViewById<ImageView>(R.id.imgDisplay)
                 txtDisplayName.text = currentUser?.displayName
                 txtDisplayEmail.text = currentUser?.email
-                userimg.setImageURI(currentUser?.photoUrl)
+                val photoUrl: String = currentUser?.photoUrl.toString()
+                if (!photoUrl.isNullOrEmpty()) {
+                    Glide.with(applicationContext)
+                        .load(photoUrl)
+                        .placeholder(R.drawable.iconbg) // Imagen de marcador de posición mientras carga
+                        .apply(RequestOptions().transform(CircleCrop()))
+                        .error(R.drawable.iconbg) // Imagen de marcador de posición en caso de error
+                        .into(userimg)
+                }
             }
 
             override fun onDrawerClosed(drawerView: View) {
