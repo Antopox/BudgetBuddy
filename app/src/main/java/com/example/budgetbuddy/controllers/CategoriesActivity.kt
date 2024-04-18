@@ -11,11 +11,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.budgetbuddy.R
-import com.example.budgetbuddy.fragments.BalanceFragment
 import com.example.budgetbuddy.utils.Utils
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -29,7 +26,7 @@ class CategoriesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         setContentView(R.layout.activity_categories)
 
         drawerLayout = findViewById(R.id.main_categories)
-        var currentUser = FirebaseAuth.getInstance().currentUser
+        val currentUser = FirebaseAuth.getInstance().currentUser
 
         drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
@@ -37,9 +34,9 @@ class CategoriesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             }
 
             override fun onDrawerOpened(drawerView: View) {
-                var txtDisplayName = drawerView.findViewById<TextView>(R.id.txtDisplayName)
-                var txtDisplayEmail = drawerView.findViewById<TextView>(R.id.txtDisplayEmail)
-                var userimg = drawerView.findViewById<ImageView>(R.id.imgDisplay)
+                val txtDisplayName = drawerView.findViewById<TextView>(R.id.txtDisplayName)
+                val txtDisplayEmail = drawerView.findViewById<TextView>(R.id.txtDisplayEmail)
+                val userimg = drawerView.findViewById<ImageView>(R.id.imgDisplay)
                 txtDisplayName.text = currentUser?.displayName
                 txtDisplayEmail.text = currentUser?.email
                 userimg.setImageURI(currentUser?.photoUrl)
@@ -99,7 +96,7 @@ class CategoriesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
     private fun closeSession(){
         Utils().deleteUserPreferences(applicationContext)
-        var auth = FirebaseAuth.getInstance()
+        val auth = FirebaseAuth.getInstance()
         auth.signOut()
 
         val i = Intent(this, LoginActivity::class.java)

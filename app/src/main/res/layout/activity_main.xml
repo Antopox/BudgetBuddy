@@ -40,8 +40,11 @@
             android:id="@+id/bottomNavigationView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:itemTextColor="@color/light_blue"
+            app:itemIconTint="@color/light_blue"
             android:layout_gravity="bottom"
-            app:menu="@menu/menu_bottom"></com.google.android.material.bottomnavigation.BottomNavigationView>
+            app:itemActiveIndicatorStyle="@style/App.Custom.Indicator"
+            app:menu="@menu/menu_bottom" />
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
