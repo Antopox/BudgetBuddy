@@ -27,7 +27,10 @@
             app:title="@string/categories"
             app:titleCentered="true" />
 
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recViewCategories"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
 
     </LinearLayout>

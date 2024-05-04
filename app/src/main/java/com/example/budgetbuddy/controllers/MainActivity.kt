@@ -24,6 +24,7 @@ import com.example.budgetbuddy.databinding.ActivityMainBinding
 import com.example.budgetbuddy.fragments.BalanceFragment
 import com.example.budgetbuddy.fragments.CalendarFragment
 import com.example.budgetbuddy.fragments.RecordFragment
+import com.example.budgetbuddy.utils.BalanceDialog
 import com.example.budgetbuddy.utils.FirebaseRealtime
 import com.example.budgetbuddy.utils.Utils
 import com.google.android.material.navigation.NavigationView

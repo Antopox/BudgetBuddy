@@ -19,4 +19,11 @@
     <string name="profile">Profile</string>
     <string name="open_nav">Open nav</string>
     <string name="close_nav">Close nav</string>
+    <string name="new_balance">Enter your balance</string>
+    <string name="incomes">Incomes</string>
+    <string name="outgoings">Outgoings</string>
+    <string name="day">Day</string>
+    <string name="week">Week</string>
+    <string name="month">Month</string>
+    <string name="year">Year</string>
 </resources>

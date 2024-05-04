@@ -5,7 +5,6 @@ import android.widget.Toast
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.models.User
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.UserInfo
 
 class Utils {
 
@@ -34,6 +33,15 @@ class Utils {
         user.email = prefs.getString("email", "").toString()
 
         return user
+    }
+
+    fun getUserUID(c: Context): String{
+
+        val prefs =
+            c.getSharedPreferences(c.getString(R.string.prefs_file), Context.MODE_PRIVATE)
+        val userUID = prefs.getString("UID", "").toString()
+
+        return userUID
     }
 
     fun deleteUserPreferences(c: Context){
