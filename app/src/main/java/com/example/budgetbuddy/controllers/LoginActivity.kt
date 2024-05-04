@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.budgetbuddy.R
@@ -120,5 +121,8 @@ class LoginActivity : AppCompatActivity() {
     private fun toMainActivity(){
         val i = Intent(this, MainActivity::class.java)
         startActivity(i)
+    }
+    override fun onBackPressed() {
+        onBackPressedDispatcher.onBackPressed()
     }
 }

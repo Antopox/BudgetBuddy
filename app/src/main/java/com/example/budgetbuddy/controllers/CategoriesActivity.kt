@@ -12,24 +12,51 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.example.budgetbuddy.R
+import com.example.budgetbuddy.adapters.CategoriesAdapter
+import com.example.budgetbuddy.models.Category
+import com.example.budgetbuddy.utils.FirebaseRealtime
 import com.example.budgetbuddy.utils.Utils
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 
-class CategoriesActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class CategoriesActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, FirebaseRealtime.FirebaseCategoriesCallback {
 
-    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var drawerLayout : DrawerLayout
+    private lateinit var recviewCat : RecyclerView
+    private lateinit var adapter: CategoriesAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_categories)
 
+        recviewCat = findViewById(R.id.recViewCategories)
+
+        recviewCat.layoutManager = GridLayoutManager(this, 3)
+
         drawerLayout = findViewById(R.id.main_categories)
         val currentUser = FirebaseAuth.getInstance().currentUser
+
+        FirebaseRealtime().getCategories(Utils().getUserUID(this), this)
+
+        val toolbar = findViewById<Toolbar>(R.id.categoriesToolbar)
+        setSupportActionBar(toolbar)
+
+        val navigationView = findViewById<NavigationView>(R.id.nav_view_categories)
+        navigationView.setNavigationItemSelectedListener(this)
+
+        val toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+
+        if (savedInstanceState == null){
+            navigationView.setCheckedItem(R.id.mb_home)
+        }
 
         drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
@@ -62,20 +89,6 @@ class CategoriesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
             }
         })
-
-        val toolbar = findViewById<Toolbar>(R.id.categoriesToolbar)
-        setSupportActionBar(toolbar)
-
-        val navigationView = findViewById<NavigationView>(R.id.nav_view_categories)
-        navigationView.setNavigationItemSelectedListener(this)
-
-        val toggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_nav, R.string.close_nav)
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
-
-        if (savedInstanceState == null){
-            navigationView.setCheckedItem(R.id.mb_home)
-        }
     }
 
     override fun onNavigationItemSelected(p0: MenuItem): Boolean {
@@ -113,5 +126,10 @@ class CategoriesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
         val i = Intent(this, LoginActivity::class.java)
         startActivity(i)
+    }
+
+    override fun onCategoriesLoaded(cats: ArrayList<Category>) {
+        adapter = CategoriesAdapter(cats)
+        recviewCat.adapter = adapter
     }
 }
