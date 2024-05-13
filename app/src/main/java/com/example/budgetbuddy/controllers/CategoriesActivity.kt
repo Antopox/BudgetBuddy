@@ -2,6 +2,7 @@ package com.example.budgetbuddy.controllers
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
@@ -21,6 +22,7 @@ import com.example.budgetbuddy.R
 import com.example.budgetbuddy.adapters.CategoriesAdapter
 import com.example.budgetbuddy.models.Category
 import com.example.budgetbuddy.utils.FirebaseRealtime
+import com.example.budgetbuddy.utils.NewCategoryDialog
 import com.example.budgetbuddy.utils.Utils
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -89,6 +91,25 @@ class CategoriesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
             }
         })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_add_category, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.btAddNewCategory -> {
+                NewCategoryDialog (
+                    onSubmitClickListener = {
+                        FirebaseRealtime().addCategory(Utils().getUserUID(this), it)
+                    }
+                ).show(supportFragmentManager, "NewRecordDialog")
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onNavigationItemSelected(p0: MenuItem): Boolean {

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="10dp"
     android:elevation="8dp"
     app:cardCornerRadius="20dp">
 
@@ -40,8 +41,8 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/iconbgdark"
-            app:civ_border_color="@color/light_blue"
-            app:civ_border_width="2dp"
+            app:civ_border_color="@color/black"
+            app:civ_border_width="1dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

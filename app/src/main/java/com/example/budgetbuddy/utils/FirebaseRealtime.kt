@@ -17,34 +17,37 @@ class FirebaseRealtime {
         reference.setValue(balance)
     }
 
-    fun getBalance(userUID: String): Double {
+    fun getBalance(userUID: String, callback: (Double) -> Unit) {
+
         val reference = firebaseDatabase.child(userUID).child("balance")
-        var balance : Double = -1.0
         reference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    balance = dataSnapshot.value.toString().toDouble()
+                val balance = if (dataSnapshot.exists()) {
+                    dataSnapshot.getValue(Double::class.java) ?: -1.0
+                } else {
+                    -1.0
                 }
+                callback(balance)
             }
 
             override fun onCancelled(error: DatabaseError) {
-                balance = -1.0
+                callback(-1.0)
             }
         })
-
-        return balance
     }
 
     fun addOrSubtractBalance(userUID: String, amount: Double, type: String){
-        var balance = getBalance(userUID)
+        getBalance(userUID){
+            var balance = it
 
-        if (balance != -1.0){
-            if (type == "incomes"){
-                balance += amount
-            } else {
-                balance -= amount
+            if (balance != -1.0){
+                if (type == "incomes"){
+                    balance += amount
+                } else {
+                    balance -= amount
+                }
+                changeBalance(userUID, balance)
             }
-            changeBalance(userUID, balance)
         }
     }
 
@@ -135,6 +138,43 @@ class FirebaseRealtime {
 
         newRecordRef.setValue(recordData).addOnSuccessListener {
             Log.d("New Record", newRecordRef.key + "   " + rec.concept)
+        }
+    }
+
+    fun deleteRecord(rec: Record, userUID: String, type: String) {
+
+        val recordRef = firebaseDatabase.child(userUID).child(type).child(rec.id)
+        recordRef.removeValue()
+        addOrSubtractBalance(userUID, rec.amount, type)
+    }
+
+    fun getCategory(userUID: String, categoryId: String, callback: (Category) -> Unit) {
+
+        val reference = firebaseDatabase.child(userUID).child("categories").child(categoryId)
+        reference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val category = dataSnapshot.getValue(Category::class.java)
+                    callback(category!!)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                callback(Category())
+            }
+        })
+    }
+
+    fun addCategory(userUID: String, it: Category) {
+        val reference = firebaseDatabase.child(userUID).child("categories").push()
+
+        val catData = HashMap<String, Any>()
+        catData["name"] = it.name
+        catData["bgcolor"] = it.bgcolor
+        catData["icon"] = it.icon
+
+        reference.setValue(catData).addOnSuccessListener {
+            Log.d("New Category", reference.key + "   " + catData.get("name"))
         }
     }
 }

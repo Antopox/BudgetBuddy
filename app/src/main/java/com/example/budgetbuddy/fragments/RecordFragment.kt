@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,7 +25,7 @@ class RecordFragment : Fragment(), FirebaseRealtime.FirebaseRecordCallback {
     private lateinit var tabDayMonth : TabLayout
     private lateinit var useruid : String
     private lateinit var adapter : RecordsAdapter
-    private var opTypeSelected = 0
+    private lateinit var opTypeSelected : String
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,15 +43,16 @@ class RecordFragment : Fragment(), FirebaseRealtime.FirebaseRecordCallback {
         useruid = Utils().getUserUID(requireContext())
         recview.layoutManager = LinearLayoutManager(context)
         FirebaseRealtime().getImcomes(useruid, this)
+        opTypeSelected = "incomes"
 
         tabType.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
             override fun onTabSelected(p0: TabLayout.Tab?) {
                 if (p0?.position == 0){
                     FirebaseRealtime().getImcomes(useruid, this@RecordFragment)
-                    opTypeSelected = 0
+                    opTypeSelected = "incomes"
                 }else{
                     FirebaseRealtime().getOutgoings(useruid, this@RecordFragment)
-                    opTypeSelected = 1
+                    opTypeSelected = "outgoings"
                 }
             }
 
@@ -71,7 +73,7 @@ class RecordFragment : Fragment(), FirebaseRealtime.FirebaseRecordCallback {
 
         tabDayMonth.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
             override fun onTabSelected(p0: TabLayout.Tab?) {
-                if (opTypeSelected == 0){
+                if (opTypeSelected == "incomes"){
                     FirebaseRealtime().getImcomes(useruid, this@RecordFragment)
                 }else{
                     FirebaseRealtime().getOutgoings(useruid, this@RecordFragment)
@@ -88,7 +90,34 @@ class RecordFragment : Fragment(), FirebaseRealtime.FirebaseRecordCallback {
     }
 
     override fun onRecordsLoaded(records: ArrayList<Record>) {
+
         adapter = RecordsAdapter(records)
+        adapter.type = opTypeSelected
+
+        adapter.onItemLongClick = { record: Record, view: View ->
+
+            val popup = PopupMenu(requireContext(), view)
+            popup.inflate(R.menu.menu_context_record)
+            popup.setForceShowIcon(true)
+
+            popup.setOnMenuItemClickListener {
+
+                when (it.itemId) {
+                    R.id.action_delete -> {
+                        //Se abre el dialogo de confirmación de borrado
+                        records.remove(record)
+                        FirebaseRealtime().deleteRecord(record, Utils().getUserUID(requireContext()), opTypeSelected)
+                        adapter.notifyDataSetChanged()
+
+                        true
+                    }
+
+                    else -> true
+                }
+                true
+            }
+            popup.show()
+        }
         recview.adapter = adapter
         applySelectedFilter()
     }

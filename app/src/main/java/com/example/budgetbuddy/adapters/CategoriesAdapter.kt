@@ -33,10 +33,15 @@ class CategoriesAdapter(pcategories : ArrayList<Category>) : RecyclerView.Adapte
         val cat = categories[position]
 
         holder.txtName.text = cat.name
-        holder.imgCat.circleBackgroundColor = Color.parseColor(cat.bgcolor)
-        val idimg = context.resources.getIdentifier(cat.icon, "drawable", context.packageName)
 
-        holder.imgCat.setImageResource(idimg)
+
+        if (cat.icon == 0){
+            holder.imgCat.setImageResource(R.drawable.iconbgdark)
+        }else{
+            holder.imgCat.setImageResource(cat.icon)
+        }
+
+        holder.imgCat.circleBackgroundColor = Color.parseColor("#" + cat.bgcolor)
 
         holder.itemView.setOnClickListener{
 
