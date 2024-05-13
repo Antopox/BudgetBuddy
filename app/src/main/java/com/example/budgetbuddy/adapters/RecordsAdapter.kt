@@ -8,18 +8,26 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetbuddy.R
+import com.example.budgetbuddy.models.Category
 import com.example.budgetbuddy.models.Record
+import com.example.budgetbuddy.utils.FirebaseRealtime
+import com.example.budgetbuddy.utils.Utils
 import de.hdodenhof.circleimageview.CircleImageView
 import java.util.Calendar
 
 class RecordsAdapter(precords: ArrayList<Record>) : RecyclerView.Adapter<RecordsAdapter.ViewHolder>(){
 
     val records : ArrayList<Record>
+    lateinit var type : String
     lateinit var context : Context
+
+    var onItemClick : ((Category) -> Unit)? = null
+    var onItemLongClick : ((Record, View) -> Unit) = { record: Record, view: View -> false }
 
     init {
         this.records = precords
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         this.context = parent.context
         val v = LayoutInflater.from(context).inflate(R.layout.record_custom_layout, parent, false)
@@ -33,7 +41,8 @@ class RecordsAdapter(precords: ArrayList<Record>) : RecyclerView.Adapter<Records
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val rec = this.records[position]
 
-        if(rec.amount < 0){
+
+        if(type == "outgoings"){
             holder.txtAmount.setTextColor(Color.RED)
             holder.txtAmount.text = "-" + rec.amount.toString()
         }else{
@@ -44,7 +53,16 @@ class RecordsAdapter(precords: ArrayList<Record>) : RecyclerView.Adapter<Records
         holder.txtDate.text = rec.date
         holder.txtAmount.text = rec.amount.toString()
         holder.txtConcept.text = rec.concept
-        holder.imgCat.setImageResource(R.drawable.baseline_category_24)
+
+        FirebaseRealtime().getCategory(Utils().getUserUID(context), rec.categoryId){
+            holder.imgCat.setImageResource(it.icon)
+            holder.imgCat.circleBackgroundColor = Color.parseColor("#" + it.bgcolor)
+        }
+
+        holder.itemView.setOnLongClickListener {
+            onItemLongClick(rec, it)
+            true
+        }
     }
 
     fun filterByDay(){
@@ -97,7 +115,7 @@ class RecordsAdapter(precords: ArrayList<Record>) : RecyclerView.Adapter<Records
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView), View.OnLongClickListener{
+    inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
         var txtConcept : TextView
         var txtAmount : TextView
@@ -111,8 +129,5 @@ class RecordsAdapter(precords: ArrayList<Record>) : RecyclerView.Adapter<Records
             imgCat = itemView.findViewById(R.id.imgCategoryRecord)
         }
 
-        override fun onLongClick(v: View?): Boolean {
-            TODO("Not yet implemented")
-        }
     }
 }

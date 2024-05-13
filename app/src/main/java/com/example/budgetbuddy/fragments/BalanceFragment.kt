@@ -15,8 +15,8 @@ import com.google.firebase.auth.FirebaseUser
 
 class BalanceFragment : Fragment() {
 
-    private lateinit var txtBalance : TextView
-    private lateinit var btEditBalance : ImageButton
+    private lateinit var txtBalance: TextView
+    private lateinit var btEditBalance: ImageButton
     private lateinit var currentUser: FirebaseUser
 
     override fun onCreateView(
@@ -30,18 +30,17 @@ class BalanceFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        currentUser = FirebaseAuth.getInstance().currentUser!!
-
         txtBalance = view.findViewById(R.id.txtBalance)
         btEditBalance = view.findViewById(R.id.btEditBalance)
 
-        btEditBalance.setOnClickListener{
+        currentUser = FirebaseAuth.getInstance().currentUser!!
+        btEditBalance.setOnClickListener {
             showBalanceDialog()
         }
         userExist(currentUser.uid)
     }
 
-    private fun showBalanceDialog(){
+    private fun showBalanceDialog() {
         BalanceDialog(
             onSubmitClickListener = {
                 txtBalance.text = it.toString()
@@ -50,16 +49,17 @@ class BalanceFragment : Fragment() {
         ).show(parentFragmentManager, "BalanceDialog")
     }
 
-    fun userExist(userUID: String){
-        var balance = FirebaseRealtime().getBalance(userUID)
+    fun userExist(userUID: String) {
 
-        if (balance != -1.0){
-            txtBalance.text = balance.toString()
-        } else {
-            // No hay balance guardado
-            showBalanceDialog()
+        FirebaseRealtime().getBalance(userUID){
+            var balance = it
+
+            if (balance == -1.0) {
+                // No hay balance guardado
+                showBalanceDialog()
+            }else {
+                txtBalance.text = balance.toString()
+            }
         }
-
-
     }
 }

@@ -23,6 +23,7 @@
             android:background="@color/light_blue"
             android:gravity="bottom"
             app:buttonGravity="bottom"
+            app:menu="@menu/menu_add_category"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:title="@string/categories"
             app:titleCentered="true" />
@@ -30,7 +31,10 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recViewCategories"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:layout_weight="2">
+
+        </androidx.recyclerview.widget.RecyclerView>
 
 
     </LinearLayout>
