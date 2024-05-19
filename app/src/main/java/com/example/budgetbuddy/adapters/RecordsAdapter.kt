@@ -54,7 +54,7 @@ class RecordsAdapter(precords: ArrayList<Record>) : RecyclerView.Adapter<Records
         holder.txtAmount.text = rec.amount.toString()
         holder.txtConcept.text = rec.concept
 
-        FirebaseRealtime().getCategory(Utils().getUserUID(context), rec.categoryId){
+        FirebaseRealtime().getCategoryFromId(Utils().getUserUID(context), rec.categoryId){
             holder.imgCat.setImageResource(it.icon)
             holder.imgCat.circleBackgroundColor = Color.parseColor("#" + it.bgcolor)
         }

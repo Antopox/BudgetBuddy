@@ -42,17 +42,19 @@ class RecordFragment : Fragment(), FirebaseRealtime.FirebaseRecordCallback {
         tabDayMonth = view.findViewById(R.id.tabRecordDayMonth)
         useruid = Utils().getUserUID(requireContext())
         recview.layoutManager = LinearLayoutManager(context)
-        FirebaseRealtime().getImcomes(useruid, this)
         opTypeSelected = "incomes"
+
+        FirebaseRealtime().getRecords(useruid, opTypeSelected, this)
 
         tabType.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
             override fun onTabSelected(p0: TabLayout.Tab?) {
                 if (p0?.position == 0){
-                    FirebaseRealtime().getImcomes(useruid, this@RecordFragment)
                     opTypeSelected = "incomes"
+                    FirebaseRealtime().getRecords(useruid, opTypeSelected, this@RecordFragment)
+
                 }else{
-                    FirebaseRealtime().getOutgoings(useruid, this@RecordFragment)
                     opTypeSelected = "outgoings"
+                    FirebaseRealtime().getRecords(useruid, opTypeSelected, this@RecordFragment)
                 }
             }
 
@@ -73,11 +75,7 @@ class RecordFragment : Fragment(), FirebaseRealtime.FirebaseRecordCallback {
 
         tabDayMonth.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
             override fun onTabSelected(p0: TabLayout.Tab?) {
-                if (opTypeSelected == "incomes"){
-                    FirebaseRealtime().getImcomes(useruid, this@RecordFragment)
-                }else{
-                    FirebaseRealtime().getOutgoings(useruid, this@RecordFragment)
-                }
+                FirebaseRealtime().getRecords(useruid, opTypeSelected, this@RecordFragment)
             }
 
             override fun onTabUnselected(p0: TabLayout.Tab?) {
