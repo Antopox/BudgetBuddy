@@ -7,18 +7,20 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.math.BigDecimal
+import java.math.RoundingMode
+import java.util.Calendar
 
 class FirebaseRealtime {
     val firebaseDatabase = FirebaseDatabase.getInstance().getReference()
 
-    fun changeBalance(userUID: String, balance: Double){
-
+    fun changeBalance(userUID: String, balance: Double) {
         val reference = firebaseDatabase.child(userUID).child("balance")
-        reference.setValue(balance)
+        val formattedBalance = BigDecimal(balance).setScale(2, RoundingMode.HALF_UP).toDouble()
+        reference.setValue(formattedBalance)
     }
 
     fun getBalance(userUID: String, callback: (Double) -> Unit) {
-
         val reference = firebaseDatabase.child(userUID).child("balance")
         reference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -27,7 +29,8 @@ class FirebaseRealtime {
                 } else {
                     -1.0
                 }
-                callback(balance)
+                val formattedBalance = BigDecimal(balance).setScale(2, RoundingMode.HALF_UP).toDouble()
+                callback(formattedBalance)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -36,17 +39,20 @@ class FirebaseRealtime {
         })
     }
 
-    fun addOrSubtractBalance(userUID: String, amount: Double, type: String){
-        getBalance(userUID){
-            var balance = it
+    fun addOrSubtractBalance(userUID: String, amount: Double, type: String) {
+        getBalance(userUID) { balance ->
+            if (balance != -1.0) {
+                var newBalance = BigDecimal(balance)
+                val adjustment = BigDecimal(amount)
 
-            if (balance != -1.0){
-                if (type == "incomes"){
-                    balance += amount
+                newBalance = if (type == "incomes") {
+                    newBalance.add(adjustment)
                 } else {
-                    balance -= amount
+                    newBalance.subtract(adjustment)
                 }
-                changeBalance(userUID, balance)
+
+                val formattedBalance = newBalance.setScale(2, RoundingMode.HALF_UP).toDouble()
+                changeBalance(userUID, formattedBalance)
             }
         }
     }
@@ -55,31 +61,9 @@ class FirebaseRealtime {
         fun onRecordsLoaded(records: ArrayList<Record>)
     }
 
-    fun getImcomes(userUID: String, callback: FirebaseRecordCallback){
+    fun getRecords(userUID: String, type: String, callback: FirebaseRecordCallback){
 
-        val reference = firebaseDatabase.child(userUID).child("incomes")
-        reference.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                var records = ArrayList<Record>()
-                for (result in snapshot.children) {
-                    val record = result.getValue(Record::class.java)
-                    if (record != null) {
-                        record.id = result.key.toString()
-                        records.add(record)
-                    }
-                }
-                callback.onRecordsLoaded(records)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Cancelación de la operación de lectura de Firebase
-            }
-        })
-    }
-
-    fun getOutgoings(userUID: String, callback: FirebaseRecordCallback){
-
-        val reference = firebaseDatabase.child(userUID).child("outgoings")
+        val reference = firebaseDatabase.child(userUID).child(type)
         reference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 var records = ArrayList<Record>()
@@ -148,19 +132,42 @@ class FirebaseRealtime {
         addOrSubtractBalance(userUID, rec.amount, type)
     }
 
-    fun getCategory(userUID: String, categoryId: String, callback: (Category) -> Unit) {
+    fun getCategoryFromId(userUID: String, categoryId: String, callback: (Category) -> Unit) {
 
         val reference = firebaseDatabase.child(userUID).child("categories").child(categoryId)
         reference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
                     val category = dataSnapshot.getValue(Category::class.java)
-                    callback(category!!)
+                    if (category != null) {
+                        callback(category)
+                        return
+                    }
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                callback(Category())
+                // Log the error if needed and return null
+                Log.e("FirebaseError", "Error getting category: ${error.message}")
+            }
+        })
+    }
+
+    fun getCategoryIdFromName(userUID: String, categoryName: String, callback: (String) -> Unit) {
+
+        val reference = firebaseDatabase.child(userUID).child("categories").orderByChild("name").equalTo(categoryName)
+        reference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (snapshot in dataSnapshot.children) {
+                        callback(snapshot.key.toString())
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Log the error if needed and return null
+                Log.e("FirebaseError", "Error getting category: ${error.message}")
             }
         })
     }
@@ -176,5 +183,92 @@ class FirebaseRealtime {
         reference.setValue(catData).addOnSuccessListener {
             Log.d("New Category", reference.key + "   " + catData.get("name"))
         }
+    }
+
+    fun getSumValueFromCat(userUID: String, catId: String, type: String, callback: (Float) -> Unit) {
+        val calendar = Calendar.getInstance()
+        val Month = calendar.get(Calendar.MONTH)
+        val Year = calendar.get(Calendar.YEAR)
+
+        val reference = firebaseDatabase.child(userUID).child(type).orderByChild("categoryId").equalTo(catId)
+
+        reference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                var sum = 0.0
+                for (result in snapshot.children) {
+                    val record = result.getValue(Record::class.java)
+
+                    if (record != null) {
+                        val c = record.getCalendar()
+                        if (c.get(Calendar.MONTH) == Month && c.get(Calendar.YEAR) == Year){
+                            sum += record.amount
+                        }
+                    }
+                }
+
+                callback(sum.toFloat())
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Manejar el error aquí
+            }
+        })
+    }
+
+    fun getDonutCategories(userUID: String, type: String, callback: (MutableSet<String>) -> Unit) {
+        val calendar = Calendar.getInstance()
+        val Month = calendar.get(Calendar.MONTH)
+        val Year = calendar.get(Calendar.YEAR)
+
+        val reference = firebaseDatabase.child(userUID).child(type).orderByChild("date").endAt("${Month}/${Year}")
+        val uniqueCatIds: MutableSet<String> = mutableSetOf()
+
+        reference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (result in snapshot.children) {
+                    val catID = result.child("categoryId").getValue(String::class.java)
+
+                    if (catID != null) {
+                        uniqueCatIds.add(catID)
+                        Log.d("catID", catID)
+                    }
+                }
+                Log.d("uniqueCatIds", uniqueCatIds.size.toString())
+                callback(uniqueCatIds)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Manejar el error aquí
+            }
+        })
+    }
+
+    fun getMonthRecordsFromCat(userUID: String, catId: String, type: String, callback: FirebaseRecordCallback) {
+        val calendar = Calendar.getInstance()
+        val Month = calendar.get(Calendar.MONTH)
+        val year = calendar.get(Calendar.YEAR)
+
+        val reference = firebaseDatabase.child(userUID).child(type).orderByChild("categoryId").equalTo(catId)
+
+        reference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var records = ArrayList<Record>()
+                for (result in snapshot.children) {
+                    val record = result.getValue(Record::class.java)
+                    if (record != null) {
+                        if (record.getCalendar().get(Calendar.MONTH) == Month && record.getCalendar().get(Calendar.YEAR) == year) {
+                            record.id = result.key.toString()
+                            records.add(record)
+                        }
+                    }
+                }
+                callback.onRecordsLoaded(records)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Cancelación de la operación de lectura de Firebase
+            }
+        })
     }
 }
