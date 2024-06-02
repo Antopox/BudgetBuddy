@@ -20,9 +20,6 @@
             android:name=".controllers.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".controllers.SettingsActivity"
-            android:exported="false" />
-        <activity
             android:name=".controllers.CategoriesActivity"
             android:exported="false" />
         <activity
