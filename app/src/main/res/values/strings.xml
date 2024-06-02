@@ -40,5 +40,17 @@
     <string name="enter_cat_name">Please enter a category name</string>
     <string name="select_cat_color">Please select a color</string>
     <string name="select_cat_icon">Please select an icon</string>
+    <string name="delete_cat">Delete Category</string>
+    <string name="delete_record">Delete Record</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="yes">Yes</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="updated_profile">Profile updated</string>
+    <string name="deleted_account">Account deleted</string>
+    <string name="pp_updated">Profile picture updated</string>
+    <string name="reset_password">Reset password</string>
+    <string name="enter_email_reset_pass">Enter the email linked to your account</string>
+    <string name="sent_email">Sent email</string>
+    <string name="email_sent">Recovery email sent</string>
 
 </resources>

@@ -36,4 +36,16 @@
     <string name="enter_cat_name">Introduzca un nombre para la categoria</string>
     <string name="select_cat_color">Seleccione un color</string>
     <string name="select_cat_icon">Seleccione un icono</string>
+    <string name="delete_cat">Borrar Categoría</string>
+    <string name="delete_record">Borrar Registro</string>
+    <string name="are_you_sure">Estas seguro?</string>
+    <string name="yes">Si</string>
+    <string name="delete_account">Borrar Cuenta</string>
+    <string name="updated_profile">Perfil actualizado</string>
+    <string name="deleted_account">Cuenta borrada</string>
+    <string name="pp_updated">Foto de perfil actualizada</string>
+    <string name="reset_password">Restablecer contraseña</string>
+    <string name="enter_email_reset_pass">Introduce el email asociado a tu cuenta</string>
+    <string name="sent_email">Enviar email</string>
+    <string name="email_sent">Email de recuperación enviado</string>
 </resources>
