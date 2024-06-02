@@ -9,7 +9,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -118,8 +120,6 @@ class CategoriesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
             R.id.mb_categories -> drawerLayout.closeDrawer(GravityCompat.START)
 
-            R.id.mb_settings -> changeActivity(SettingsActivity())
-
             R.id.mb_profile -> changeActivity(ProfileActivity())
 
             R.id.mb_logout-> closeSession()
@@ -128,6 +128,7 @@ class CategoriesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
     }
 
     override fun onBackPressed() {
+        super.onBackPressed()
         if (drawerLayout.isDrawerOpen(GravityCompat.START)){
             drawerLayout.closeDrawer(GravityCompat.START)
         }else{
@@ -151,6 +152,57 @@ class CategoriesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
 
     override fun onCategoriesLoaded(cats: ArrayList<Category>) {
         adapter = CategoriesAdapter(cats)
+        adapter.onItemLongClick = { cat: Category, view: View ->
+            val popup = PopupMenu(this, view)
+            popup.inflate(R.menu.menu_context_record)
+            popup.setForceShowIcon(true)
+
+            popup.setOnMenuItemClickListener {
+
+                when (it.itemId) {
+                    R.id.action_delete -> {
+                        //Se abre el dialogo de confirmación de borrado
+                        val builder = AlertDialog.Builder(this)
+                        builder.setTitle("Confirmación de Borrado")
+                        builder.setMessage("¿Estás seguro de que deseas borrar esto?")
+
+                        builder.setPositiveButton("Sí") { dialog, which ->
+                            FirebaseRealtime().categoryHasRecords(Utils().getUserUID(this), cat.id){
+                                if (it){
+                                    Utils().toast(applicationContext, "No se puede eliminar una categoría con registros.")
+                                }else{
+                                    Utils().toast(applicationContext, "Eliminado.")
+                                    cats.remove(cat)
+                                    FirebaseRealtime().deleteCategory(Utils().getUserUID(this), cat)
+                                    adapter.notifyDataSetChanged()
+                                }
+                            }
+                        }
+
+                        builder.setNegativeButton("No") { dialog, which ->
+                            Utils().toast(applicationContext, "Cancelado.")
+                        }
+
+                        builder.setNeutralButton("Cancelar") { dialog, which ->
+                            // El usuario canceló el diálogo, no se hace nada
+                        }
+
+                        builder.show()
+
+                        true
+                    }
+
+                    else -> true
+                }
+                true
+            }
+            popup.show()
+        }
         recviewCat.adapter = adapter
+
+    }
+
+    private fun showDeleteConfirmationDialog() {
+
     }
 }

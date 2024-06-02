@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BudgetBuddy</string>
+    <string name="log_in">Inicia Sesión</string>
+    <string name="sign_in">Regístrate</string>
+    <string name="user_name">Nombre de usuario</string>
+    <string name="password">Contraseña</string>
+    <string name="required">Requerido!</string>
+    <string name="login_success">Acceso correcto</string>
+    <string name="balance">Balance</string>
+    <string name="record">Registros</string>
+    <string name="calendar">Calendario</string>
+    <string name="home">Inicio</string>
+    <string name="categories">Categorias</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="profile">Perfil</string>
+    <string name="new_balance">Introduce el balance</string>
+    <string name="incomes">Ingresos</string>
+    <string name="outgoings">Gastos</string>
+    <string name="day">Día</string>
+    <string name="week">Semana</string>
+    <string name="month">Mes</string>
+    <string name="year">Año</string>
+    <string name="all">Todos</string>
+    <string name="delete">Borrar</string>
+    <string name="new_record">Nuevo registro</string>
+    <string name="new_category">Nueva categoría</string>
+    <string name="confirm">Confirmar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="this_month">Este mes:</string>
+    <string name="forgotPass">He olvidado mi contraseña</string>
+    <string name="enter_amount">Introduce una cantidad</string>
+    <string name="enter_concept">Introduce un concepto</string>
+    <string name="select_cat">Elija una categoria</string>
+    <string name="no_categories">Necesitas crear una categoria para añadir un registro</string>
+    <string name="enter_cat_name">Introduzca un nombre para la categoria</string>
+    <string name="select_cat_color">Seleccione un color</string>
+    <string name="select_cat_icon">Seleccione un icono</string>
+</resources>

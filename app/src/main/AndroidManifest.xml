@@ -14,10 +14,10 @@
         android:theme="@style/Theme.BudgetBuddy"
         tools:targetApi="31">
         <activity
-            android:name=".controllers.ProfileActivity"
+            android:name=".controllers.ForgotPassActivity"
             android:exported="false" />
         <activity
-            android:name=".controllers.SettingsActivity"
+            android:name=".controllers.ProfileActivity"
             android:exported="false" />
         <activity
             android:name=".controllers.CategoriesActivity"

@@ -43,12 +43,14 @@ class NewCategoryDialog(
             }
         })
         binding.btNewCat.setOnClickListener {
-            dismiss()
-            var category = Category()
-            category.name = binding.etNewCatName.text.toString()
-            category.bgcolor = catColor.toHexString()
-            category.icon = iconID
-            onSubmitClickListener.invoke(category)
+            if(checkValues()){
+                var category = Category()
+                category.name = binding.etNewCatName.text.toString()
+                category.bgcolor = catColor.toHexString()
+                category.icon = iconID
+                onSubmitClickListener.invoke(category)
+                dismiss()
+            }
         }
 
         val dialog = builder.create()
@@ -73,5 +75,20 @@ class NewCategoryDialog(
         )
         return icons
 
+    }
+
+    fun checkValues(): Boolean{
+        if(binding.etNewCatName.text.toString().isEmpty()){
+            Utils().toast(requireContext(), getString(R.string.enter_cat_name))
+            return false
+        }else if(catColor == 0){
+            Utils().toast(requireContext(), getString(R.string.select_cat_color))
+            return false
+        }else if(iconID == 0){
+            Utils().toast(requireContext(), getString(R.string.select_cat_icon))
+            return false
+        }else {
+            return true
+        }
     }
 }

@@ -18,7 +18,6 @@ import java.util.Calendar
 class RecordsAdapter(precords: ArrayList<Record>) : RecyclerView.Adapter<RecordsAdapter.ViewHolder>(){
 
     val records : ArrayList<Record>
-    lateinit var type : String
     lateinit var context : Context
 
     var onItemClick : ((Category) -> Unit)? = null
@@ -42,12 +41,12 @@ class RecordsAdapter(precords: ArrayList<Record>) : RecyclerView.Adapter<Records
         val rec = this.records[position]
 
 
-        if(type == "outgoings"){
+        if(rec.amount < 0){
             holder.txtAmount.setTextColor(Color.RED)
-            holder.txtAmount.text = "-" + rec.amount.toString()
+            holder.txtAmount.text = rec.amount.toString()
         }else{
             holder.txtAmount.setTextColor(Color.GREEN)
-            holder.txtAmount.text = "+" + rec.amount.toString()
+            holder.txtAmount.text = rec.amount.toString()
         }
 
         holder.txtDate.text = rec.date

@@ -19,6 +19,7 @@ class CategoriesAdapter(pcategories : ArrayList<Category>) : RecyclerView.Adapte
      var viewClicked : View? = null
 
     var onItemClick : ((Category) -> Unit)? = null
+    var onItemLongClick : ((Category, View) -> Unit) = { cat: Category, view: View -> false }
 
     init {
         this.categories = pcategories
@@ -49,6 +50,10 @@ class CategoriesAdapter(pcategories : ArrayList<Category>) : RecyclerView.Adapte
             viewClicked = it
             it.setBackgroundColor(Color.GRAY)
             onItemClick?.invoke(cat)
+        }
+        holder.itemView.setOnLongClickListener{
+            onItemLongClick(cat, it)
+            true
         }
     }
 

@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.budgetbuddy.R
 import com.example.budgetbuddy.adapters.CategoriesAdapter
 import com.example.budgetbuddy.databinding.DialogNewRecordBinding
 import com.example.budgetbuddy.models.Category
@@ -29,13 +30,14 @@ class NewRecordDialog(
 
         val builder = AlertDialog.Builder(activity)
         builder.setView(binding.root)
+
+        binding.etNewRecordAmount.setupDecimalKeyListener()
         type = "incomes"
         catID = ""
-        val calendar = Calendar.getInstance()
         FirebaseRealtime().getCategories(Utils().getUserUID(requireContext()), this)
         binding.recViewNewRecCat.layoutManager = LinearLayoutManager(this.requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
-        binding.etNewRecordAmount.setupDecimalKeyListener()
+
 
         binding.tabOperationType.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
             override fun onTabSelected(p0: TabLayout.Tab?) {
@@ -58,16 +60,19 @@ class NewRecordDialog(
 
         binding.btAddNewRecord.setOnClickListener {
 
-            val record = Record()
-            val currentDate = Calendar.getInstance()
-            record.date = "${currentDate.get(Calendar.DAY_OF_MONTH)}/${currentDate.get(Calendar.MONTH) + 1}/${currentDate.get(Calendar.YEAR)}"
+            if (checkValues()){
+                val record = Record()
+                val currentDate = Calendar.getInstance()
+                record.date = "${currentDate.get(Calendar.DAY_OF_MONTH)}/${currentDate.get(Calendar.MONTH) + 1}/${currentDate.get(
+                    Calendar.YEAR)}"
 
-            record.amount = binding.etNewRecordAmount.text.toString().toDouble()
-            record.concept = binding.etNewRecordConcept.text.toString()
-            record.categoryId = catID
+                record.amount = binding.etNewRecordAmount.text.toString().toDouble()
+                record.concept = binding.etNewRecordConcept.text.toString()
+                record.categoryId = catID
 
-            onSubmitClickListener.invoke(record, type)
-            dismiss()
+                onSubmitClickListener.invoke(record, type)
+                dismiss()
+            }
         }
 
         val dialog = builder.create()
@@ -76,10 +81,31 @@ class NewRecordDialog(
     }
 
     override fun onCategoriesLoaded(cats: ArrayList<Category>) {
-        val adapter = CategoriesAdapter(cats)
-        binding.recViewNewRecCat.adapter = adapter
-        adapter.onItemClick = {
-            catID = it.id
+        if (cats.size == 0){
+            Utils().toast(requireContext(), getString(R.string.no_categories))
+            dismiss()
+        }else{
+            val adapter = CategoriesAdapter(cats)
+            binding.recViewNewRecCat.adapter = adapter
+            adapter.onItemClick = {
+                catID = it.id
+            }
+        }
+    }
+
+    fun checkValues(): Boolean{
+        if (binding.etNewRecordConcept.text.toString().isEmpty()){
+            Utils().toast(requireContext(), getString(R.string.enter_concept))
+            return false
+
+        }else if (binding.etNewRecordAmount.text.toString().isEmpty()){
+            Utils().toast(requireContext(), getString(R.string.enter_amount))
+            return false
+        }else if (catID == ""){
+            Utils().toast(requireContext(), getString(R.string.select_cat))
+            return false
+        }else{
+            return true
         }
     }
 }

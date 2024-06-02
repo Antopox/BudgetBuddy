@@ -70,6 +70,9 @@ class FirebaseRealtime {
                 for (result in snapshot.children) {
                     val record = result.getValue(Record::class.java)
                     if (record != null) {
+                        if (type == "outgoings") {
+                            record.amount = -record.amount
+                        }
                         record.id = result.key.toString()
                         records.add(record)
                     }
@@ -270,5 +273,106 @@ class FirebaseRealtime {
                 // Cancelación de la operación de lectura de Firebase
             }
         })
+    }
+
+    fun getRecordsForDate(userUID: String, date: String, callback: (ArrayList<Record>) -> Unit) {
+        val incomesRef = firebaseDatabase.child(userUID).child("incomes").orderByChild("date").equalTo(date)
+        val outgoingsRef = firebaseDatabase.child(userUID).child("outgoings").orderByChild("date").equalTo(date)
+
+        val records = ArrayList<Record>()
+        var inReady = false
+        var outReady = false
+
+        records.clear()
+
+        fun checkAndNotify() {
+            if (inReady || outReady) {
+                callback(records)
+            }
+        }
+
+        incomesRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (snapshot in dataSnapshot.children) {
+                    val record = snapshot.getValue(Record::class.java)
+                    if (record != null) {
+                        record.id = snapshot.key.toString()
+                        records.add(record)
+                    }
+                }
+                inReady = true
+                checkAndNotify()
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Handle possible errors.
+            }
+        })
+        outgoingsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (snapshot in dataSnapshot.children) {
+                    val record = snapshot.getValue(Record::class.java)
+                    if (record != null) {
+                        record.id = snapshot.key.toString()
+                        record.amount = -record.amount
+                        records.add(record)
+                    }
+                }
+                outReady = true
+                checkAndNotify()
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Handle possible errors.
+            }
+        })
+
+
+    }
+
+    fun categoryHasRecords(userUID: String, catid: String, callback: (Boolean) -> Unit) {
+        val incomesRef = firebaseDatabase.child(userUID).child("incomes").orderByChild("categoryId").equalTo(catid)
+        val outgoingsRef = firebaseDatabase.child(userUID).child("outgoings").orderByChild("categoryId").equalTo(catid)
+
+        var hasRecords = false
+
+        incomesRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (result in snapshot.children) {
+                    val record = result.getValue(Record::class.java)
+                    if (record != null) {
+                        hasRecords = true
+                        break
+                    }
+                }
+
+                outgoingsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (result in snapshot.children) {
+                            val record = result.getValue(Record::class.java)
+                            if (record != null) {
+                                hasRecords = true
+                                break
+                            }
+                        }
+                        callback(hasRecords)
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        callback(false)
+                    }
+                })
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                callback(false)
+            }
+        })
+    }
+
+    fun deleteCategory(userUID: String, cat: Category) {
+
+        val CatRef = firebaseDatabase.child(userUID).child("categories").child(cat.id)
+        CatRef.removeValue()
     }
 }
