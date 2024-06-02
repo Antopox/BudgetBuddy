@@ -11,8 +11,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
@@ -87,8 +85,6 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
             R.id.mb_categories -> changeActivity(CategoriesActivity())
 
-            R.id.mb_settings -> changeActivity(SettingsActivity())
-
             R.id.mb_profile -> drawerLayout.closeDrawer(GravityCompat.START)
 
             R.id.mb_logout-> closeSession()
@@ -97,6 +93,7 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     }
 
     override fun onBackPressed() {
+        super.onBackPressed()
         if (drawerLayout.isDrawerOpen(GravityCompat.START)){
             drawerLayout.closeDrawer(GravityCompat.START)
         }else{

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -90,7 +91,6 @@ class RecordFragment : Fragment(), FirebaseRealtime.FirebaseRecordCallback {
     override fun onRecordsLoaded(records: ArrayList<Record>) {
 
         adapter = RecordsAdapter(records)
-        adapter.type = opTypeSelected
 
         adapter.onItemLongClick = { record: Record, view: View ->
 
@@ -103,9 +103,25 @@ class RecordFragment : Fragment(), FirebaseRealtime.FirebaseRecordCallback {
                 when (it.itemId) {
                     R.id.action_delete -> {
                         //Se abre el dialogo de confirmación de borrado
-                        records.remove(record)
-                        FirebaseRealtime().deleteRecord(record, Utils().getUserUID(requireContext()), opTypeSelected)
-                        adapter.notifyDataSetChanged()
+                        val builder = AlertDialog.Builder(requireContext())
+                        builder.setTitle("Confirmación de Borrado")
+                        builder.setMessage("¿Estás seguro de que deseas borrar esto?")
+
+                        builder.setNeutralButton("Cancelar") { dialog, which ->
+                            // El usuario canceló el diálogo, no se hace nada
+                        }
+
+                        builder.setNegativeButton("No") { dialog, which ->
+                            Utils().toast(requireContext(), "Cancelado.")
+                        }
+
+                        builder.setPositiveButton("Sí") { dialog, which ->
+                            Utils().toast(requireContext(), "Eliminado.")
+                            records.remove(record)
+                            FirebaseRealtime().deleteRecord(record, Utils().getUserUID(requireContext()), opTypeSelected)
+                            adapter.notifyDataSetChanged()
+                        }
+                        builder.show()
 
                         true
                     }

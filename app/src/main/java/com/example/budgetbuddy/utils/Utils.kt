@@ -3,7 +3,6 @@ package com.example.budgetbuddy.utils
 import android.content.Context
 import android.widget.Toast
 import com.example.budgetbuddy.R
-import com.example.budgetbuddy.models.User
 import com.google.firebase.auth.FirebaseUser
 
 class Utils {
@@ -21,18 +20,6 @@ class Utils {
         prefs.putString("UID", user?.uid)
         prefs.putBoolean("isSignedIn", true)
         prefs.apply()
-    }
-
-    fun getUserPreferences(c: Context): User {
-        var user = User()
-
-        val prefs =
-            c.getSharedPreferences(c.getString(R.string.prefs_file), Context.MODE_PRIVATE)
-        user.userUID = prefs.getString("UID", "").toString()
-        user.name = prefs.getString("name", "").toString()
-        user.email = prefs.getString("email", "").toString()
-
-        return user
     }
 
     fun getUserUID(c: Context): String{

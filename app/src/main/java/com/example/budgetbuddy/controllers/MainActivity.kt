@@ -130,8 +130,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             R.id.mb_categories -> changeActivity(CategoriesActivity())
 
-            R.id.mb_settings -> changeActivity(SettingsActivity())
-
             R.id.mb_profile -> changeActivity(ProfileActivity())
 
             R.id.mb_logout-> closeSession()
@@ -140,6 +138,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onBackPressed() {
+        super.onBackPressed()
         if (drawerLayout.isDrawerOpen(GravityCompat.START)){
             drawerLayout.closeDrawer(GravityCompat.START)
         }else{

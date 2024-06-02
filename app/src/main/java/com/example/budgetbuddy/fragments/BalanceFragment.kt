@@ -16,6 +16,7 @@ import com.example.budgetbuddy.adapters.RecordsAdapter
 import com.example.budgetbuddy.models.Record
 import com.example.budgetbuddy.utils.BalanceDialog
 import com.example.budgetbuddy.utils.FirebaseRealtime
+import com.example.budgetbuddy.utils.Utils
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieData
@@ -25,15 +26,13 @@ import com.github.mikephil.charting.formatter.DefaultValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.google.android.material.tabs.TabLayout
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 
 class BalanceFragment : Fragment(), OnChartValueSelectedListener,
     FirebaseRealtime.FirebaseRecordCallback {
 
     private lateinit var txtBalance: TextView
     private lateinit var btEditBalance: ImageButton
-    private lateinit var currentUser: FirebaseUser
+    private lateinit var currentUser: String
     private lateinit var donutChart: PieChart
     private lateinit var recView: RecyclerView
     private lateinit var tabType: TabLayout
@@ -50,6 +49,9 @@ class BalanceFragment : Fragment(), OnChartValueSelectedListener,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        currentUser = Utils().getUserUID(requireContext())
+        Log.d("userUID", currentUser)
+
         donutChart = view.findViewById(R.id.chartBalance)
         txtBalance = view.findViewById(R.id.txtBalance)
         btEditBalance = view.findViewById(R.id.btEditBalance)
@@ -60,12 +62,10 @@ class BalanceFragment : Fragment(), OnChartValueSelectedListener,
         btEditBalance.setOnClickListener {
             showBalanceDialog()
         }
-        currentUser = FirebaseAuth.getInstance().currentUser!!
 
-        userExist(currentUser.uid)
         typeSelected = "incomes"
 
-
+        userExist(currentUser)
         printDonutChartData(typeSelected)
         donutChart.setOnChartValueSelectedListener(this)
 
@@ -94,7 +94,7 @@ class BalanceFragment : Fragment(), OnChartValueSelectedListener,
         BalanceDialog(
             onSubmitClickListener = {
                 txtBalance.text = it.toString()
-                FirebaseRealtime().changeBalance(currentUser.uid, it)
+                FirebaseRealtime().changeBalance(currentUser, it)
             }
         ).show(parentFragmentManager, "BalanceDialog")
     }
@@ -102,13 +102,11 @@ class BalanceFragment : Fragment(), OnChartValueSelectedListener,
     fun userExist(userUID: String) {
 
         FirebaseRealtime().getBalance(userUID){
-            var balance = it
-
-            if (balance == -1.0) {
+            if (it == -1.0) {
                 // No hay balance guardado
                 showBalanceDialog()
             }else {
-                txtBalance.text = balance.toString()
+                txtBalance.text = it.toString()
             }
         }
     }
@@ -116,16 +114,16 @@ class BalanceFragment : Fragment(), OnChartValueSelectedListener,
     private fun printDonutChartData(type: String) {
         val list: ArrayList<PieEntry> = ArrayList()
         val colors: ArrayList<Int> = ArrayList()
-        FirebaseRealtime().getDonutCategories(currentUser.uid, type) { catsIds ->
+        FirebaseRealtime().getDonutCategories(currentUser, type) { catsIds ->
 
             // Initialize a counter to track completed asynchronous operations
             var pendingTasks = catsIds.size
 
             for (catId in catsIds) {
-                FirebaseRealtime().getCategoryFromId(currentUser.uid, catId) { cat ->
+                FirebaseRealtime().getCategoryFromId(currentUser, catId) { cat ->
                     colors.add(Color.parseColor("#" + cat.bgcolor))
 
-                    FirebaseRealtime().getSumValueFromCat(currentUser.uid, catId, type) { value ->
+                    FirebaseRealtime().getSumValueFromCat(currentUser, catId, type) { value ->
                         list.add(PieEntry(value, cat.name))
                         Log.d("pieEntry", "$value   ${cat.name}")
 
@@ -160,10 +158,10 @@ class BalanceFragment : Fragment(), OnChartValueSelectedListener,
     override fun onValueSelected(e: Entry?, h: Highlight?) {
         if (e is PieEntry) {
             val pieEntry = e
-            FirebaseRealtime().getCategoryIdFromName(currentUser.uid, pieEntry.label){
+            FirebaseRealtime().getCategoryIdFromName(currentUser, pieEntry.label){
                 Log.d("pie Entry Name Clicked", pieEntry.label)
                 Log.d("Category Id", it)
-                FirebaseRealtime().getMonthRecordsFromCat(currentUser.uid, it, typeSelected, this@BalanceFragment)
+                FirebaseRealtime().getMonthRecordsFromCat(currentUser, it, typeSelected, this@BalanceFragment)
             }
         }
     }
@@ -174,7 +172,7 @@ class BalanceFragment : Fragment(), OnChartValueSelectedListener,
     override fun onRecordsLoaded(records: ArrayList<Record>) {
         Log.d("recordSize", records.size.toString())
         val adapter = RecordsAdapter(records)
-        adapter.type = typeSelected
         recView.adapter = adapter
     }
+
 }

@@ -59,14 +59,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etLoginPass" />
+        app:layout_constraintTop_toBottomOf="@+id/txtForgotPass" />
 
     <Button
         android:id="@+id/btGoogleLogin"
         style="@style/Theme.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
+        android:layout_marginTop="12dp"
         android:backgroundTintMode="add"
         android:gravity="center"
         android:theme="@style/Theme.Button"
@@ -74,40 +74,13 @@
         app:iconGravity="textEnd"
         app:iconPadding="2dp"
         app:iconSize="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btSignIn"
-        app:layout_constraintVertical_bias="0.19" />
-
-    <Button
-        android:id="@+id/btFacebookLogin"
-        style="@style/Theme.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Facebook"
-        android:theme="@style/Theme.Button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btTwitterLogin"
-        app:layout_constraintStart_toEndOf="@+id/btGoogleLogin"
-        app:layout_constraintTop_toBottomOf="@+id/btSignIn"
-        app:layout_constraintVertical_bias="0.19999999" />
-
-    <Button
-        android:id="@+id/btTwitterLogin"
-        style="@style/Theme.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="50dp"
-        android:text="X"
-        android:theme="@style/Theme.Button"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btSignIn"
-        app:layout_constraintVertical_bias="0.19" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btSignIn" />
 
     <TextView
         android:id="@+id/logInTittle"
-        android:layout_width="159dp"
+        android:layout_width="wrap_content"
         android:layout_height="61dp"
         android:layout_marginTop="36dp"
         android:gravity="center"
@@ -122,10 +95,22 @@
         android:id="@+id/logInLogo"
         android:layout_width="260dp"
         android:layout_height="215dp"
-        android:layout_marginTop="65dp"
+        android:layout_marginTop="55dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/budgetbuddyiconbyw" />
+
+    <TextView
+        android:id="@+id/txtForgotPass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/forgotPass"
+        android:textColor="@color/black"
+        android:textColorLink="@color/black"
+        android:textStyle="italic"
+        app:layout_constraintStart_toStartOf="@+id/etLoginPass"
+        app:layout_constraintTop_toBottomOf="@+id/etLoginPass" />
 </androidx.constraintlayout.widget.ConstraintLayout>

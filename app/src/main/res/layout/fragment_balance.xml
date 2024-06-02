@@ -14,7 +14,7 @@
             android:id="@+id/txtBalance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="60dp"
             android:text="@string/balance"
             android:textColor="@color/light_blue"
             android:textSize="24sp"
@@ -26,6 +26,7 @@
             android:id="@+id/btEditBalance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
             android:background="@android:color/transparent"
             android:src="@drawable/baseline_edit_24"
             app:layout_constraintBottom_toBottomOf="@+id/txtBalance"
@@ -33,65 +34,83 @@
             app:layout_constraintTop_toTopOf="@+id/txtBalance"
             app:tint="@color/light_blue" />
 
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/chartBalance"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="16dp"
-            android:scrollbarSize="20dp"
-            app:layout_constraintBottom_toTopOf="@+id/recviewRecentRecords"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtThisMonth" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recviewRecentRecords"
-            android:layout_width="0dp"
-            android:layout_height="200dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="24dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayoutBalance"
-            android:layout_width="0dp"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView2"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="8dp"
+            app:cardCornerRadius="30dp"
+            app:cardElevation="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtBalance">
 
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/tabIncomesBalance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/incomes" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/tabOutgoingsBalance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/outgoings" />
-        </com.google.android.material.tabs.TabLayout>
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/chartBalance"
+                    android:layout_width="0dp"
+                    android:layout_height="275dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginBottom="16dp"
+                    android:scrollbarSize="20dp"
+                    app:layout_constraintBottom_toTopOf="@+id/recviewRecentRecords"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtThisMonth" />
 
-        <TextView
-            android:id="@+id/txtThisMonth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/this_month"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tabLayoutBalance" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recviewRecentRecords"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabLayoutBalance"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/tabIncomesBalance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/incomes" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/tabOutgoingsBalance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/outgoings" />
+
+                </com.google.android.material.tabs.TabLayout>
+
+                <TextView
+                    android:id="@+id/txtThisMonth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/this_month"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tabLayoutBalance" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </FrameLayout>

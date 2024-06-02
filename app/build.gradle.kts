@@ -58,6 +58,7 @@ dependencies {
 
     implementation ("com.github.Philjay:MPAndroidChart:v3.1.0")
 
+    implementation ("com.kizitonwose.calendar:view:2.0.0")
 
     implementation ("com.github.madrapps:pikolo:2.0.2")
     implementation ("com.github.bumptech.glide:glide:4.12.0")

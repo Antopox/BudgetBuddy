@@ -4,11 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.GravityCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.budgetbuddy.R
 import com.example.budgetbuddy.utils.Utils
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -24,10 +22,9 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var txtPass: EditText
     private lateinit var btLogin: Button
     private lateinit var btGooogleLogin: Button
-    private lateinit var btFaceLogin: Button
-    private lateinit var btXlogin: Button
     private lateinit var btSignIn: Button
 
+    private lateinit var forgotPass: TextView
     private lateinit var auth: FirebaseAuth
 
 
@@ -37,13 +34,12 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         session()
 
+        forgotPass = findViewById(R.id.txtForgotPass)
         txtEmail = findViewById(R.id.etLoginEmail)
         txtPass = findViewById(R.id.etLoginPass)
         btLogin = findViewById(R.id.btLogIn)
         btSignIn = findViewById(R.id.btSignIn)
         btGooogleLogin = findViewById(R.id.btGoogleLogin)
-        btFaceLogin = findViewById(R.id.btFacebookLogin)
-        btXlogin = findViewById(R.id.btTwitterLogin)
 
         auth = FirebaseAuth.getInstance()
         btLogin.setOnClickListener {
@@ -56,6 +52,11 @@ class LoginActivity : AppCompatActivity() {
                     Utils().toast(applicationContext, it.message.toString())
                 }
             }
+        }
+
+        forgotPass.setOnClickListener {
+            val i = Intent(this, ForgotPassActivity::class.java)
+            startActivity(i)
         }
 
         btSignIn.setOnClickListener {
@@ -123,6 +124,7 @@ class LoginActivity : AppCompatActivity() {
         startActivity(i)
     }
     override fun onBackPressed() {
+        super.onBackPressed()
         onBackPressedDispatcher.onBackPressed()
     }
 }
