@@ -9,7 +9,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.Toolbar
@@ -28,6 +27,13 @@ import com.example.budgetbuddy.utils.NewCategoryDialog
 import com.example.budgetbuddy.utils.Utils
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.iamageo.library.BeautifulDialog
+import com.iamageo.library.description
+import com.iamageo.library.onNegative
+import com.iamageo.library.onPositive
+import com.iamageo.library.position
+import com.iamageo.library.title
+import com.iamageo.library.type
 
 class CategoriesActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, FirebaseRealtime.FirebaseCategoriesCallback {
 
@@ -162,32 +168,24 @@ class CategoriesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
                 when (it.itemId) {
                     R.id.action_delete -> {
                         //Se abre el dialogo de confirmación de borrado
-                        val builder = AlertDialog.Builder(this)
-                        builder.setTitle("Confirmación de Borrado")
-                        builder.setMessage("¿Estás seguro de que deseas borrar esto?")
-
-                        builder.setPositiveButton("Sí") { dialog, which ->
-                            FirebaseRealtime().categoryHasRecords(Utils().getUserUID(this), cat.id){
-                                if (it){
-                                    Utils().toast(applicationContext, "No se puede eliminar una categoría con registros.")
-                                }else{
-                                    Utils().toast(applicationContext, "Eliminado.")
-                                    cats.remove(cat)
-                                    FirebaseRealtime().deleteCategory(Utils().getUserUID(this), cat)
-                                    adapter.notifyDataSetChanged()
+                        BeautifulDialog.build(this)
+                            .title(getString(R.string.delete_cat), titleColor = R.color.black)
+                            .description(getString(R.string.are_you_sure), color = R.color.black)
+                            .type(type = BeautifulDialog.TYPE.ALERT)
+                            .position(BeautifulDialog.POSITIONS.CENTER)
+                            .onPositive(text = getString(R.string.yes), shouldIDismissOnClick = true) {
+                                FirebaseRealtime().categoryHasRecords(Utils().getUserUID(this), cat.id){
+                                    if (it){
+                                        Utils().toast(applicationContext, "No se puede eliminar una categoría con registros.")
+                                    }else{
+                                        Utils().toast(applicationContext, "Eliminado.")
+                                        cats.remove(cat)
+                                        FirebaseRealtime().deleteCategory(Utils().getUserUID(this), cat)
+                                        adapter.notifyDataSetChanged()
+                                    }
                                 }
                             }
-                        }
-
-                        builder.setNegativeButton("No") { dialog, which ->
-                            Utils().toast(applicationContext, "Cancelado.")
-                        }
-
-                        builder.setNeutralButton("Cancelar") { dialog, which ->
-                            // El usuario canceló el diálogo, no se hace nada
-                        }
-
-                        builder.show()
+                            .onNegative(text = getString(android.R.string.cancel)) {}
 
                         true
                     }

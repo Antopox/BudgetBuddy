@@ -375,4 +375,9 @@ class FirebaseRealtime {
         val CatRef = firebaseDatabase.child(userUID).child("categories").child(cat.id)
         CatRef.removeValue()
     }
+
+    fun deleteUser(userUID: String) {
+        val userRef = firebaseDatabase.child(userUID)
+        userRef.removeValue()
+    }
 }

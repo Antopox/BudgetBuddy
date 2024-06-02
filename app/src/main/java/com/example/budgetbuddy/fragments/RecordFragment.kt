@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +16,13 @@ import com.example.budgetbuddy.utils.NewRecordDialog
 import com.example.budgetbuddy.utils.Utils
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
+import com.iamageo.library.BeautifulDialog
+import com.iamageo.library.description
+import com.iamageo.library.onNegative
+import com.iamageo.library.onPositive
+import com.iamageo.library.position
+import com.iamageo.library.title
+import com.iamageo.library.type
 
 class RecordFragment : Fragment(), FirebaseRealtime.FirebaseRecordCallback {
 
@@ -103,25 +109,18 @@ class RecordFragment : Fragment(), FirebaseRealtime.FirebaseRecordCallback {
                 when (it.itemId) {
                     R.id.action_delete -> {
                         //Se abre el dialogo de confirmación de borrado
-                        val builder = AlertDialog.Builder(requireContext())
-                        builder.setTitle("Confirmación de Borrado")
-                        builder.setMessage("¿Estás seguro de que deseas borrar esto?")
-
-                        builder.setNeutralButton("Cancelar") { dialog, which ->
-                            // El usuario canceló el diálogo, no se hace nada
-                        }
-
-                        builder.setNegativeButton("No") { dialog, which ->
-                            Utils().toast(requireContext(), "Cancelado.")
-                        }
-
-                        builder.setPositiveButton("Sí") { dialog, which ->
-                            Utils().toast(requireContext(), "Eliminado.")
-                            records.remove(record)
-                            FirebaseRealtime().deleteRecord(record, Utils().getUserUID(requireContext()), opTypeSelected)
-                            adapter.notifyDataSetChanged()
-                        }
-                        builder.show()
+                        BeautifulDialog.build(requireActivity())
+                            .title(getString(R.string.delete_record), titleColor = R.color.black)
+                            .description(getString(R.string.are_you_sure), color = R.color.black)
+                            .type(type = BeautifulDialog.TYPE.ALERT)
+                            .position(BeautifulDialog.POSITIONS.CENTER)
+                            .onPositive(text = getString(R.string.yes), shouldIDismissOnClick = true) {
+                                Utils().toast(requireContext(), "Eliminado.")
+                                records.remove(record)
+                                FirebaseRealtime().deleteRecord(record, Utils().getUserUID(requireContext()), opTypeSelected)
+                                adapter.notifyDataSetChanged()
+                            }
+                            .onNegative(text = getString(android.R.string.cancel)) {}
 
                         true
                     }

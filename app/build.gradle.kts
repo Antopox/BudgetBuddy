@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.firebase.auth.ktx)
     implementation(libs.play.services.auth)
     implementation(libs.firebase.database.ktx)
+    implementation(libs.firebase.storage.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -59,6 +60,8 @@ dependencies {
     implementation ("com.github.Philjay:MPAndroidChart:v3.1.0")
 
     implementation ("com.kizitonwose.calendar:view:2.0.0")
+
+    implementation("com.github.iamageo:beautiful-dialog:1.0.9")
 
     implementation ("com.github.madrapps:pikolo:2.0.2")
     implementation ("com.github.bumptech.glide:glide:4.12.0")
