@@ -118,6 +118,10 @@ class BalanceFragment : Fragment(), OnChartValueSelectedListener,
 
             // Initialize a counter to track completed asynchronous operations
             var pendingTasks = catsIds.size
+            if (pendingTasks == 0) {
+                list.add(PieEntry(0f, ""))
+                updateDonutChart(list, colors, type)
+            }
 
             for (catId in catsIds) {
                 FirebaseRealtime().getCategoryFromId(currentUser, catId) { cat ->
@@ -150,7 +154,7 @@ class BalanceFragment : Fragment(), OnChartValueSelectedListener,
         donutChart.data = pieData
         donutChart.description.isEnabled = false
         donutChart.legend.isEnabled = false
-        donutChart.centerText = type
+        donutChart.centerText = tabType.getTabAt(tabType.selectedTabPosition)?.text
         donutChart.animateY(1500)
         donutChart.invalidate()
     }
@@ -159,8 +163,7 @@ class BalanceFragment : Fragment(), OnChartValueSelectedListener,
         if (e is PieEntry) {
             val pieEntry = e
             FirebaseRealtime().getCategoryIdFromName(currentUser, pieEntry.label){
-                Log.d("pie Entry Name Clicked", pieEntry.label)
-                Log.d("Category Id", it)
+
                 FirebaseRealtime().getMonthRecordsFromCat(currentUser, it, typeSelected, this@BalanceFragment)
             }
         }
