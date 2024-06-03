@@ -204,7 +204,8 @@ class FirebaseRealtime {
 
                     if (record != null) {
                         val c = record.getCalendar()
-                        if (c.get(Calendar.MONTH) == Month && c.get(Calendar.YEAR) == Year){
+                        Log.d("month", c.get(Calendar.MONTH).toString() + "/" + c.get(Calendar.YEAR).toString())
+                        if (c.get(Calendar.MONTH) + 1 == Month && c.get(Calendar.YEAR) == Year){
                             sum += record.amount
                         }
                     }
