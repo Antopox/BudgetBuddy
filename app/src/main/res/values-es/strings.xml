@@ -48,4 +48,5 @@
     <string name="enter_email_reset_pass">Introduce el email asociado a tu cuenta</string>
     <string name="sent_email">Enviar email</string>
     <string name="email_sent">Email de recuperación enviado</string>
+    <string name="accept">Aceptar</string>
 </resources>
