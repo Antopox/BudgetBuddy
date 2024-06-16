@@ -52,5 +52,6 @@
     <string name="enter_email_reset_pass">Enter the email linked to your account</string>
     <string name="sent_email">Sent email</string>
     <string name="email_sent">Recovery email sent</string>
+    <string name="accept">Accept</string>
 
 </resources>
