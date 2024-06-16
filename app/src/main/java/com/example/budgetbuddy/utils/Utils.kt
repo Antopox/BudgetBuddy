@@ -5,6 +5,9 @@ import android.widget.Toast
 import com.example.budgetbuddy.R
 import com.google.firebase.auth.FirebaseUser
 
+/**
+ * Librería de funciones útiles y sobre las preferencias del usuario
+ */
 class Utils {
 
     fun toast(context: Context, message: String){
@@ -15,9 +18,9 @@ class Utils {
         val prefs =
             c.getSharedPreferences(c.getString(R.string.prefs_file), Context.MODE_PRIVATE).edit()
 
-        prefs.putString("name", user?.displayName)
-        prefs.putString("email", user?.email)
-        prefs.putString("UID", user?.uid)
+        prefs.putString("name", user.displayName)
+        prefs.putString("email", user.email)
+        prefs.putString("UID", user.uid)
         prefs.putBoolean("isSignedIn", true)
         prefs.apply()
     }
@@ -38,7 +41,7 @@ class Utils {
     }
 
     fun getIsSignedIn(c: Context): Boolean{
-        var isSigned = false
+        val isSigned: Boolean
 
         val prefs =
             c.getSharedPreferences(c.getString(R.string.prefs_file), Context.MODE_PRIVATE)

@@ -14,9 +14,11 @@ import com.example.budgetbuddy.databinding.DialogNewRecordBinding
 import com.example.budgetbuddy.models.Category
 import com.example.budgetbuddy.models.Record
 import com.google.android.material.tabs.TabLayout
-import setupDecimalKeyListener
 import java.util.Calendar
 
+/**
+ * Diálogo para agregar un nuevo registro
+ */
 class NewRecordDialog(
     private val onSubmitClickListener: (record: Record, type: String) -> Unit
 ) : DialogFragment(), FirebaseRealtime.FirebaseCategoriesCallback{
@@ -41,10 +43,10 @@ class NewRecordDialog(
 
         binding.tabOperationType.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
             override fun onTabSelected(p0: TabLayout.Tab?) {
-                if (p0?.position == 0){
-                    type = "incomes"
+                type = if (p0?.position == 0){
+                    "incomes"
                 }else{
-                    type = "outgoings"
+                    "outgoings"
                 }
             }
 
@@ -93,7 +95,7 @@ class NewRecordDialog(
         }
     }
 
-    fun checkValues(): Boolean{
+    private fun checkValues(): Boolean{
         if (binding.etNewRecordConcept.text.toString().isEmpty()){
             Utils().toast(requireContext(), getString(R.string.enter_concept))
             return false

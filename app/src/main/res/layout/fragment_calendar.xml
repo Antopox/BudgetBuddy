@@ -6,35 +6,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.CalendarFragment">
 
-    <LinearLayout
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewCalendar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="10dp">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardViewCalendar"
+        <com.kizitonwose.calendar.view.CalendarView
+            android:id="@+id/calendarView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="70dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="10dp">
+            app:cv_dayViewResource="@layout/calendar_day_layout"
+            app:cv_monthHeaderResource="@layout/calendar_day_titles_container" />
+    </androidx.cardview.widget.CardView>
 
-            <com.kizitonwose.calendar.view.CalendarView
-                android:id="@+id/calendarView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cv_dayViewResource="@layout/calendar_day_layout"
-                app:cv_monthHeaderResource="@layout/calendar_day_titles_container" />
-        </androidx.cardview.widget.CardView>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recViewRecordsOfDay"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="50dp" />
-
-    </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recViewRecordsOfDay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="50dp" />
 
 </FrameLayout>

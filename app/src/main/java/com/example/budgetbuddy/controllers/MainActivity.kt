@@ -1,7 +1,6 @@
 package com.example.budgetbuddy.controllers
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -12,8 +11,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
@@ -24,12 +21,17 @@ import com.example.budgetbuddy.databinding.ActivityMainBinding
 import com.example.budgetbuddy.fragments.BalanceFragment
 import com.example.budgetbuddy.fragments.CalendarFragment
 import com.example.budgetbuddy.fragments.RecordFragment
-import com.example.budgetbuddy.utils.BalanceDialog
-import com.example.budgetbuddy.utils.FirebaseRealtime
 import com.example.budgetbuddy.utils.Utils
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 
+/**
+ * Actividad principal con 3 pantallas disponibles mediante un BottomNavigationView
+ * BalanceFragment -> Muestra tu balance y un gráfico con tus gastos e ingresos
+ * RecordsFragment -> Muestra tu historial de gastos y ingresos
+ * CalendarFragment -> Muestra un calendario con tus gastos e ingresos
+ * Menu drawer para navegar entre las actividades
+ */
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener{
 
     private lateinit var binding: ActivityMainBinding
@@ -43,24 +45,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(binding.root)
         drawerLayout = findViewById(R.id.main)
 
-        var currentUser = FirebaseAuth.getInstance().currentUser
+        val currentUser = FirebaseAuth.getInstance().currentUser
         if (!Utils().getIsSignedIn(applicationContext) && currentUser != null){
             Utils().createUserPreferences(applicationContext, currentUser)
         }
 
+        // Al abrir el menu se carga la información del usuario
         drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
 
             }
 
             override fun onDrawerOpened(drawerView: View) {
-                var txtDisplayName = drawerView.findViewById<TextView>(R.id.txtDisplayName)
-                var txtDisplayEmail = drawerView.findViewById<TextView>(R.id.txtDisplayEmail)
-                var userimg = drawerView.findViewById<ImageView>(R.id.imgDisplay)
+                val txtDisplayName = drawerView.findViewById<TextView>(R.id.txtDisplayName)
+                val txtDisplayEmail = drawerView.findViewById<TextView>(R.id.txtDisplayEmail)
+                val userimg = drawerView.findViewById<ImageView>(R.id.imgDisplay)
                 txtDisplayName.text = currentUser?.displayName
                 txtDisplayEmail.text = currentUser?.email
                 val photoUrl: String = currentUser?.photoUrl.toString()
-                if (!photoUrl.isNullOrEmpty()) {
+                if (photoUrl.isNotEmpty()) {
                     Glide.with(applicationContext)
                         .load(photoUrl)
                         .placeholder(R.drawable.iconbg) // Imagen de marcador de posición mientras carga
@@ -94,7 +97,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             replaceFragment(BalanceFragment())
             navigationView.setCheckedItem(R.id.mb_home)
         }
-
 
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId){
@@ -153,7 +155,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun closeSession(){
         Utils().deleteUserPreferences(applicationContext)
-        var auth = FirebaseAuth.getInstance()
+        val auth = FirebaseAuth.getInstance()
         auth.signOut()
 
         val i = Intent(this, LoginActivity::class.java)

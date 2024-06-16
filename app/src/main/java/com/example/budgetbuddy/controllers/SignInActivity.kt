@@ -6,12 +6,14 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.budgetbuddy.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 
+/**
+ * Actividad de registro de usuarios en Firebase Authentication
+ * mediante un nombre, un correo electrónico y una contraseña.
+ */
 class SignInActivity : AppCompatActivity() {
 
     private lateinit var txtUserName: EditText
@@ -51,15 +53,15 @@ class SignInActivity : AppCompatActivity() {
         }
     }
 
-    fun checkValues(): Boolean{
+    private fun checkValues(): Boolean{
         if (txtUserName.text.toString().trim() == ""){
-            txtUserName.setError(getString(R.string.required))
+            txtUserName.error = getString(R.string.required)
             return false
         }else if (txtUserEmail.text.toString().trim() == ""){
-            txtUserEmail.setError(getString(R.string.required))
+            txtUserEmail.error = getString(R.string.required)
             return false
         }else if (txtUserPass.text.toString().trim() == ""){
-            txtUserPass.setError(getString(R.string.required))
+            txtUserPass.error = getString(R.string.required)
             return false
         }else{
             return true

@@ -8,10 +8,14 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetbuddy.R
 
+/**
+ * Adaptador para mostrar los iconos en el diálogo de nueva categoría
+ * @param iconList Lista de recursos de IDs de iconos
+ */
 class IconAdapter(private val iconList: List<Int>) : RecyclerView.Adapter<IconAdapter.ViewHolder>() {
 
     var onItemClick : ((Int) -> Unit)? = null
-    var viewClicked : View? = null
+    private var viewClicked : View? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_icon, parent, false)
         return ViewHolder(view)

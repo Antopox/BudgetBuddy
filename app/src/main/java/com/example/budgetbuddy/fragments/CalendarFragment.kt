@@ -2,7 +2,6 @@ package com.example.budgetbuddy.fragments
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,11 +25,16 @@ import com.kizitonwose.calendar.view.CalendarView
 import com.kizitonwose.calendar.view.MonthDayBinder
 import com.kizitonwose.calendar.view.MonthHeaderFooterBinder
 import com.kizitonwose.calendar.view.ViewContainer
-import java.time.DayOfWeek
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
 
+/**
+ * Fragmento para el calendario.
+ * -Calendario mensual e interactivo
+ * -Los días con algún registro se marcan con una linea (Verde -> Ingreso, Rojo -> Gasto).
+ * -Muestra los registros del día seleccionado
+ */
 class CalendarFragment : Fragment() {
 
     private lateinit var calendarView : CalendarView
@@ -51,6 +55,7 @@ class CalendarFragment : Fragment() {
         recViewRecordsOfDay = view.findViewById(R.id.recViewRecordsOfDay)
         recViewRecordsOfDay.layoutManager = LinearLayoutManager(requireContext())
 
+        // Se carga el calendario y se marcan los días con registros
         calendarView.dayBinder = object : MonthDayBinder<DayViewContainer> {
 
             override fun create(view: View) = DayViewContainer(view)
@@ -73,12 +78,12 @@ class CalendarFragment : Fragment() {
                 container.recView.layoutManager = LinearLayoutManager(context)
                 FirebaseRealtime().getRecordsForDate(Utils().getUserUID(requireContext()), date) {
                     container.records = it
-                    Log.d("fecha y numReg", date + "   " + it.size)
                     container.recView.adapter = CalendarDayAdapter(it)
                 }
             }
         }
 
+        // Se carga la cabecera del calendario
         calendarView.monthHeaderBinder = object : MonthHeaderFooterBinder<MonthViewContainer> {
             override fun create(view: View) = MonthViewContainer(view)
             override fun bind(container: MonthViewContainer, data: CalendarMonth) {
@@ -89,12 +94,12 @@ class CalendarFragment : Fragment() {
                     container.titlesContainer.tag = data.yearMonth
                     container.titlesContainer.children.map { it as TextView }
                         .forEachIndexed { index, textView ->
-                            val dayOfWeek : DayOfWeek
 
-                            if (index + 1 >= daysOfWeek().size){
-                                dayOfWeek = daysOfWeek()[0]
+
+                            val dayOfWeek = if (index + 1 >= daysOfWeek().size){
+                                daysOfWeek()[0]
                             }else{
-                                dayOfWeek = daysOfWeek()[index + 1]
+                                daysOfWeek()[index + 1]
                             }
 
                             val title = dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
@@ -115,6 +120,8 @@ class CalendarFragment : Fragment() {
     fun updateDayRecycler(records : ArrayList<Record>){
         recViewRecordsOfDay.adapter = RecordsAdapter(records)
     }
+
+    //Viewholder para cada día del calendario
     inner class DayViewContainer(view: View) : ViewContainer(view) {
         val textView: TextView = view.findViewById(R.id.txtDayOfMonth)
         val recView: RecyclerView = view.findViewById(R.id.recviewCalendarDay)
@@ -126,6 +133,7 @@ class CalendarFragment : Fragment() {
         }
     }
 
+    //Viewholder para el encabezado del calendario
     inner class MonthViewContainer(view: View) : ViewContainer(view) {
         val txtMonth: TextView = view.findViewById(R.id.txtMonthCalendar)
         val titlesContainer: ViewGroup = view.findViewById(R.id.titlesContainer)

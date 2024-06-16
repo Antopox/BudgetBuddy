@@ -9,6 +9,9 @@ import com.example.budgetbuddy.R
 import com.example.budgetbuddy.utils.Utils
 import com.google.firebase.auth.FirebaseAuth
 
+/**
+ * Actividad de recuperación de contraseña a traves del correo asociado
+ */
 class ForgotPassActivity : AppCompatActivity() {
 
     private lateinit var etEmail: EditText
@@ -29,6 +32,7 @@ class ForgotPassActivity : AppCompatActivity() {
             if (email.isEmpty()) {
                 etEmail.error = getString(R.string.required)
             }else{
+                //Si el campo no esta vacio se envia el correo de recuperación
                 auth.sendPasswordResetEmail(email).addOnCompleteListener {
                     if (it.isSuccessful) {
                         Utils().toast(this, getString(R.string.email_sent))

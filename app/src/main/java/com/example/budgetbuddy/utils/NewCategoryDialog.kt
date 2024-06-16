@@ -13,7 +13,9 @@ import com.example.budgetbuddy.databinding.DialogNewCategoryBinding
 import com.example.budgetbuddy.models.Category
 import com.madrapps.pikolo.listeners.SimpleColorSelectionListener
 
-
+/**
+ * Diálogo para crear una categoría nueva
+ */
 class NewCategoryDialog(
     private val onSubmitClickListener: (Category) -> Unit) : DialogFragment() {
 
@@ -44,7 +46,7 @@ class NewCategoryDialog(
         })
         binding.btNewCat.setOnClickListener {
             if(checkValues()){
-                var category = Category()
+                val category = Category()
                 category.name = binding.etNewCatName.text.toString()
                 category.bgcolor = catColor.toHexString()
                 category.icon = iconID
@@ -58,7 +60,7 @@ class NewCategoryDialog(
         return dialog
     }
 
-    fun getIcons(): List<Int>{
+    private fun getIcons(): List<Int>{
         val icons = listOf(
             R.mipmap.icon_cat_1_foreground,
             R.mipmap.icon_cat_2_foreground,
@@ -77,7 +79,7 @@ class NewCategoryDialog(
 
     }
 
-    fun checkValues(): Boolean{
+    private fun checkValues(): Boolean{
         if(binding.etNewCatName.text.toString().isEmpty()){
             Utils().toast(requireContext(), getString(R.string.enter_cat_name))
             return false

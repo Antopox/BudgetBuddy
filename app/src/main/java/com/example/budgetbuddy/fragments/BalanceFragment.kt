@@ -27,6 +27,13 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.google.android.material.tabs.TabLayout
 
+/**
+ * Fragmento que muestra el balance del usuario y un gráfico circular.
+ * -Se puede cambiar el balance.
+ * -Seleccionar entre ingresos y gastos para ver el gráfico correspondiente.
+ * -El gráfico muestra la cantidad de dinero que se ha gastado/ingresado en cada categoría en el mes actual.
+ * -Al pulsar sobre una categoría, se muestra una lista de los últimos registros de esa categoría.
+ */
 class BalanceFragment : Fragment(), OnChartValueSelectedListener,
     FirebaseRealtime.FirebaseRecordCallback {
 
@@ -73,10 +80,10 @@ class BalanceFragment : Fragment(), OnChartValueSelectedListener,
             override fun onTabSelected(p0: TabLayout.Tab?) {
                 donutChart.clear()
 
-                if (p0?.position == 0) {
-                    typeSelected = "incomes"
+                typeSelected = if (p0?.position == 0) {
+                    "incomes"
                 }else{
-                    typeSelected = "outgoings"
+                    "outgoings"
                 }
                 printDonutChartData(typeSelected)
             }
@@ -99,7 +106,11 @@ class BalanceFragment : Fragment(), OnChartValueSelectedListener,
         ).show(parentFragmentManager, "BalanceDialog")
     }
 
-    fun userExist(userUID: String) {
+    /**
+     * Comprueba que exista el usuario y carga su balance
+     * @param userUID UID del usuario
+     */
+    private fun userExist(userUID: String) {
 
         FirebaseRealtime().getBalance(userUID){
             if (it == -1.0) {
@@ -111,6 +122,10 @@ class BalanceFragment : Fragment(), OnChartValueSelectedListener,
         }
     }
 
+    /**
+     * Método que carga los datos del gráfico circular.
+     * @param type Tipo de registro que se va a cargar.
+     */
     private fun printDonutChartData(type: String) {
         val list: ArrayList<PieEntry> = ArrayList()
         val colors: ArrayList<Int> = ArrayList()
@@ -120,7 +135,7 @@ class BalanceFragment : Fragment(), OnChartValueSelectedListener,
             var pendingTasks = catsIds.size
             if (pendingTasks == 0) {
                 list.add(PieEntry(0f, ""))
-                updateDonutChart(list, colors, type)
+                updateDonutChart(list, colors)
             }
 
             for (catId in catsIds) {
@@ -135,7 +150,7 @@ class BalanceFragment : Fragment(), OnChartValueSelectedListener,
                         pendingTasks -= 1
                         if (pendingTasks == 0) {
                             // All tasks are done, update the chart
-                            updateDonutChart(list, colors, type)
+                            updateDonutChart(list, colors)
                         }
                     }
                 }
@@ -143,7 +158,12 @@ class BalanceFragment : Fragment(), OnChartValueSelectedListener,
         }
     }
 
-    private fun updateDonutChart(list: ArrayList<PieEntry>, colors: ArrayList<Int>, type: String) {
+    /**
+     * Método que actualiza el gráfico circular con los datos recibidos.
+     * @param list Lista de entradas para el gráfico circular.
+     * @param colors Lista de colores para cada entrada del gráfico circular.
+     */
+    private fun updateDonutChart(list: ArrayList<PieEntry>, colors: ArrayList<Int>) {
         val pieDataSet = PieDataSet(list, "")
         pieDataSet.setColors(colors)
         pieDataSet.valueTextSize = 15f
@@ -159,10 +179,12 @@ class BalanceFragment : Fragment(), OnChartValueSelectedListener,
         donutChart.invalidate()
     }
 
+    /**
+     * Listener del gráfico circular
+     */
     override fun onValueSelected(e: Entry?, h: Highlight?) {
         if (e is PieEntry) {
-            val pieEntry = e
-            FirebaseRealtime().getCategoryIdFromName(currentUser, pieEntry.label){
+            FirebaseRealtime().getCategoryIdFromName(currentUser, e.label){
 
                 FirebaseRealtime().getMonthRecordsFromCat(currentUser, it, typeSelected, this@BalanceFragment)
             }
@@ -172,6 +194,9 @@ class BalanceFragment : Fragment(), OnChartValueSelectedListener,
     override fun onNothingSelected() {
     }
 
+    /**
+     * Método que se llama cuando se han cargado los registros de una categoría.
+     */
     override fun onRecordsLoaded(records: ArrayList<Record>) {
         Log.d("recordSize", records.size.toString())
         val adapter = RecordsAdapter(records)

@@ -24,6 +24,12 @@ import com.iamageo.library.position
 import com.iamageo.library.title
 import com.iamageo.library.type
 
+/**
+ * Fragmento que muestra los registros del usuario.
+ * -Agregar un nuevo registro.
+ * -Filtrar por tipo de registro (Gasto/Ingreso).
+ * -Filtrar por fecha (Día/Semana/Mes/Año).
+ */
 class RecordFragment : Fragment(), FirebaseRealtime.FirebaseRecordCallback {
 
     private lateinit var recview : RecyclerView
@@ -53,6 +59,7 @@ class RecordFragment : Fragment(), FirebaseRealtime.FirebaseRecordCallback {
 
         FirebaseRealtime().getRecords(useruid, opTypeSelected, this)
 
+        //Dependiendo del tipo de registro seleccionado se cambia la lista de registros
         tabType.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
             override fun onTabSelected(p0: TabLayout.Tab?) {
                 if (p0?.position == 0){
@@ -72,14 +79,20 @@ class RecordFragment : Fragment(), FirebaseRealtime.FirebaseRecordCallback {
             }
         })
 
-        fabAddNewRecord.setOnClickListener(View.OnClickListener {
-            NewRecordDialog (
+        //Botón para agregar un nuevo registro
+        fabAddNewRecord.setOnClickListener {
+            NewRecordDialog(
                 onSubmitClickListener = { record, type ->
-                    FirebaseRealtime().addNewRecord(Utils().getUserUID(requireContext()), record, type)
+                    FirebaseRealtime().addNewRecord(
+                        Utils().getUserUID(requireContext()),
+                        record,
+                        type
+                    )
                 }
             ).show(parentFragmentManager, "NewRecordDialog")
-        })
+        }
 
+        //Dependiendo de la seleccion se filtra la lista de registros segun el dia, semana, mes o año
         tabDayMonth.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
             override fun onTabSelected(p0: TabLayout.Tab?) {
                 FirebaseRealtime().getRecords(useruid, opTypeSelected, this@RecordFragment)
@@ -94,6 +107,10 @@ class RecordFragment : Fragment(), FirebaseRealtime.FirebaseRecordCallback {
         })
     }
 
+    /**
+     * Al cargarse los registros se muestra en el RecyclerView, se le añade un menu flotante y
+     * se aplica el filtro seleccionado.
+     */
     override fun onRecordsLoaded(records: ArrayList<Record>) {
 
         adapter = RecordsAdapter(records)
@@ -104,6 +121,7 @@ class RecordFragment : Fragment(), FirebaseRealtime.FirebaseRecordCallback {
             popup.inflate(R.menu.menu_context_record)
             popup.setForceShowIcon(true)
 
+            //Se muestra un menu flotante con la opcion de borrado
             popup.setOnMenuItemClickListener {
 
                 when (it.itemId) {
@@ -121,11 +139,7 @@ class RecordFragment : Fragment(), FirebaseRealtime.FirebaseRecordCallback {
                                 adapter.notifyDataSetChanged()
                             }
                             .onNegative(text = getString(android.R.string.cancel)) {}
-
-                        true
                     }
-
-                    else -> true
                 }
                 true
             }

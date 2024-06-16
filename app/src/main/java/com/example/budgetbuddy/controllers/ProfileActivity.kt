@@ -36,6 +36,12 @@ import com.iamageo.library.title
 import com.iamageo.library.type
 import de.hdodenhof.circleimageview.CircleImageView
 
+/**
+ * Actividad para mostrar el perfil del usuario
+ * -Cambiar tanto el nombre como la foto de perfil.
+ * -Borrar la cuenta (Borrará todos los datos guardados)
+ * -Menu drawer para navegar entre las diferentes actividades
+ */
 class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var drawerLayout: DrawerLayout
@@ -54,7 +60,7 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
         drawerLayout = findViewById(R.id.main_profile)
 
-        var currentUser = FirebaseAuth.getInstance().currentUser
+        val currentUser = FirebaseAuth.getInstance().currentUser
 
         drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
@@ -62,14 +68,14 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             }
 
             override fun onDrawerOpened(drawerView: View) {
-                var txtDisplayName = drawerView.findViewById<TextView>(R.id.txtDisplayName)
-                var txtDisplayEmail = drawerView.findViewById<TextView>(R.id.txtDisplayEmail)
-                var userimg = drawerView.findViewById<ImageView>(R.id.imgDisplay)
+                val txtDisplayName = drawerView.findViewById<TextView>(R.id.txtDisplayName)
+                val txtDisplayEmail = drawerView.findViewById<TextView>(R.id.txtDisplayEmail)
+                val userimg = drawerView.findViewById<ImageView>(R.id.imgDisplay)
                 txtDisplayName.text = currentUser?.displayName
                 txtDisplayEmail.text = currentUser?.email
 
                 val photoUrl: String = currentUser?.photoUrl.toString()
-                if (!photoUrl.isNullOrEmpty()) {
+                if (photoUrl.isNotEmpty()) {
                     Glide.with(applicationContext)
                         .load(photoUrl)
                         .placeholder(R.drawable.iconbg) // Imagen de marcador de posición mientras carga
@@ -249,7 +255,7 @@ class ProfileActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
     private fun closeSession(){
         Utils().deleteUserPreferences(applicationContext)
-        var auth = FirebaseAuth.getInstance()
+        val auth = FirebaseAuth.getInstance()
         auth.signOut()
 
         val i = Intent(this, LoginActivity::class.java)
