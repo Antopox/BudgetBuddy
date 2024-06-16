@@ -8,24 +8,23 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetbuddy.R
-import com.example.budgetbuddy.models.Category
 import com.example.budgetbuddy.models.Record
 import com.example.budgetbuddy.utils.FirebaseRealtime
 import com.example.budgetbuddy.utils.Utils
 import de.hdodenhof.circleimageview.CircleImageView
 import java.util.Calendar
 
+/**
+ * Adaptador para los registros con métodos de filtrado por fecha
+ * @param precords lista de registros
+ */
 class RecordsAdapter(precords: ArrayList<Record>) : RecyclerView.Adapter<RecordsAdapter.ViewHolder>(){
 
-    val records : ArrayList<Record>
+    private val records : ArrayList<Record> = precords
     lateinit var context : Context
 
-    var onItemClick : ((Category) -> Unit)? = null
-    var onItemLongClick : ((Record, View) -> Unit) = { record: Record, view: View -> false }
+    lateinit var onItemLongClick : ((Record, View) -> Unit)
 
-    init {
-        this.records = precords
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         this.context = parent.context
@@ -37,10 +36,14 @@ class RecordsAdapter(precords: ArrayList<Record>) : RecyclerView.Adapter<Records
         return this.records.size
     }
 
+    /**
+     * Setea los datos del registro y se asigna un long click listener
+     * usando el atributo onItemLongClick(método que se añade en la activity)
+     */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val rec = this.records[position]
 
-
+        //Dependiendo del valor del amount se asigna un color
         if(rec.amount < 0){
             holder.txtAmount.setTextColor(Color.RED)
             holder.txtAmount.text = rec.amount.toString()
@@ -53,6 +56,7 @@ class RecordsAdapter(precords: ArrayList<Record>) : RecyclerView.Adapter<Records
         holder.txtAmount.text = rec.amount.toString()
         holder.txtConcept.text = rec.concept
 
+        //Se busca la categoria a la que pertenece el registro para mostrar su icono
         FirebaseRealtime().getCategoryFromId(Utils().getUserUID(context), rec.categoryId){
             holder.imgCat.setImageResource(it.icon)
             holder.imgCat.circleBackgroundColor = Color.parseColor("#" + it.bgcolor)
@@ -76,24 +80,24 @@ class RecordsAdapter(precords: ArrayList<Record>) : RecyclerView.Adapter<Records
 
     fun filterByWeek(){
         val calendar = Calendar.getInstance()
-        val Week = calendar.get(Calendar.WEEK_OF_YEAR)
-        val Year = calendar.get(Calendar.YEAR)
+        val week = calendar.get(Calendar.WEEK_OF_YEAR)
+        val year = calendar.get(Calendar.YEAR)
 
         val filteredList = records.filter { record ->
             val c = record.getCalendar()
-            c.get(Calendar.WEEK_OF_YEAR) == Week && c.get(Calendar.YEAR) == Year
+            c.get(Calendar.WEEK_OF_YEAR) == week && c.get(Calendar.YEAR) == year
         }
         updateData(filteredList)
     }
 
     fun filterByMonth(){
         val calendar = Calendar.getInstance()
-        val Month = calendar.get(Calendar.MONTH)
-        val Year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val year = calendar.get(Calendar.YEAR)
 
         val filteredList = records.filter { record ->
             val c = record.getCalendar()
-            c.get(Calendar.MONTH) == Month && c.get(Calendar.YEAR) == Year
+            c.get(Calendar.MONTH) == month && c.get(Calendar.YEAR) == year
         }
         updateData(filteredList)
     }
@@ -116,17 +120,9 @@ class RecordsAdapter(precords: ArrayList<Record>) : RecyclerView.Adapter<Records
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
-        var txtConcept : TextView
-        var txtAmount : TextView
-        var txtDate : TextView
-        var imgCat : CircleImageView
-
-        init {
-            txtConcept = itemView.findViewById(R.id.txtConcept)
-            txtAmount = itemView.findViewById(R.id.txtAmount)
-            txtDate = itemView.findViewById(R.id.txtDate)
-            imgCat = itemView.findViewById(R.id.imgCategoryRecord)
-        }
-
+        var txtConcept : TextView = itemView.findViewById(R.id.txtConcept)
+        var txtAmount : TextView = itemView.findViewById(R.id.txtAmount)
+        var txtDate : TextView = itemView.findViewById(R.id.txtDate)
+        var imgCat : CircleImageView = itemView.findViewById(R.id.imgCategoryRecord)
     }
 }

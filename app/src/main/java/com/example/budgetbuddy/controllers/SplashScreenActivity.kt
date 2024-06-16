@@ -8,6 +8,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.budgetbuddy.R
 
+/**
+ * Pantalla splash que se muestra 3 segundos antes de que se inicie la aplicación
+ */
 class SplashScreenActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

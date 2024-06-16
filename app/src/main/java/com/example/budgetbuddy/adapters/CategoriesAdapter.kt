@@ -11,25 +11,29 @@ import com.example.budgetbuddy.R
 import com.example.budgetbuddy.models.Category
 import de.hdodenhof.circleimageview.CircleImageView
 
-
+/**
+ * Adatador de categorias
+ * @param pcategories lista de categorias
+ */
 class CategoriesAdapter(pcategories : ArrayList<Category>) : RecyclerView.Adapter<CategoriesAdapter.ViewHolder>(){
 
-    val categories : ArrayList<Category>
+    private val categories : ArrayList<Category> = pcategories
     lateinit var context : Context
-     var viewClicked : View? = null
+    private var viewClicked : View? = null
 
     var onItemClick : ((Category) -> Unit)? = null
-    var onItemLongClick : ((Category, View) -> Unit) = { cat: Category, view: View -> false }
+    lateinit var onItemLongClick : ((Category, View) -> Unit)
 
-    init {
-        this.categories = pcategories
-    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         this.context = parent.context
         val v = LayoutInflater.from(context).inflate(R.layout.category_custom_layout, parent, false)
         return ViewHolder(v)
     }
 
+    /**
+     * Setea los datos de la categoria y se asigna un click listener y un long click listener
+     * usando los atributos onItemClick y onItemLongClick(métodos que se añaden en la activity)
+     */
     override fun onBindViewHolder(holder: CategoriesAdapter.ViewHolder, position: Int) {
         val cat = categories[position]
 
@@ -64,12 +68,7 @@ class CategoriesAdapter(pcategories : ArrayList<Category>) : RecyclerView.Adapte
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
 
-        var txtName : TextView
-        var imgCat : CircleImageView
-
-        init {
-            txtName = itemView.findViewById(R.id.txtCatName)
-            imgCat = itemView.findViewById(R.id.imgCategory)
-        }
+        var txtName : TextView = itemView.findViewById(R.id.txtCatName)
+        var imgCat : CircleImageView = itemView.findViewById(R.id.imgCategory)
     }
 }

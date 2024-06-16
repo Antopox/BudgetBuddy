@@ -1,8 +1,11 @@
-
+package com.example.budgetbuddy.utils
 import android.view.KeyEvent
 import android.view.View
 import android.widget.EditText
 
+/**
+ * Listener para EditText que impide agregar más de dos decimales
+ */
 class DecimalKeyListener : View.OnKeyListener {
     override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
         val editText = v as EditText

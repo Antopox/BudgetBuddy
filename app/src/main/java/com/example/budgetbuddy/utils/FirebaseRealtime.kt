@@ -11,8 +11,12 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.Calendar
 
+/**
+ * Librería con las funciones para interactuar con la base de datos de Firebase
+ * @property firebaseDatabase referencia a la base de datos de Firebase
+ */
 class FirebaseRealtime {
-    val firebaseDatabase = FirebaseDatabase.getInstance().getReference()
+    private val firebaseDatabase = FirebaseDatabase.getInstance().getReference()
 
     fun changeBalance(userUID: String, balance: Double) {
         val reference = firebaseDatabase.child(userUID).child("balance")
@@ -39,7 +43,7 @@ class FirebaseRealtime {
         })
     }
 
-    fun addOrSubtractBalance(userUID: String, amount: Double, type: String) {
+    private fun addOrSubtractBalance(userUID: String, amount: Double, type: String) {
         getBalance(userUID) { balance ->
             if (balance != -1.0) {
                 var newBalance = BigDecimal(balance)
@@ -66,7 +70,7 @@ class FirebaseRealtime {
         val reference = firebaseDatabase.child(userUID).child(type)
         reference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                var records = ArrayList<Record>()
+                val records = ArrayList<Record>()
                 for (result in snapshot.children) {
                     val record = result.getValue(Record::class.java)
                     if (record != null) {
@@ -95,7 +99,7 @@ class FirebaseRealtime {
         val reference = firebaseDatabase.child(userUID).child("categories")
         reference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                var categories = ArrayList<Category>()
+                val categories = ArrayList<Category>()
                 for (result in snapshot.children) {
                     val cat = result.getValue(Category::class.java)
                     if (cat != null) {
@@ -184,14 +188,14 @@ class FirebaseRealtime {
         catData["icon"] = it.icon
 
         reference.setValue(catData).addOnSuccessListener {
-            Log.d("New Category", reference.key + "   " + catData.get("name"))
+            Log.d("New Category", reference.key + "   " + catData["name"])
         }
     }
 
     fun getSumValueFromCat(userUID: String, catId: String, type: String, callback: (Float) -> Unit) {
         val calendar = Calendar.getInstance()
-        val Month = calendar.get(Calendar.MONTH)
-        val Year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val year = calendar.get(Calendar.YEAR)
 
         val reference = firebaseDatabase.child(userUID).child(type).orderByChild("categoryId").equalTo(catId)
 
@@ -205,7 +209,7 @@ class FirebaseRealtime {
                     if (record != null) {
                         val c = record.getCalendar()
                         Log.d("month", c.get(Calendar.MONTH).toString() + "/" + c.get(Calendar.YEAR).toString())
-                        if (c.get(Calendar.MONTH) + 1 == Month && c.get(Calendar.YEAR) == Year){
+                        if (c.get(Calendar.MONTH) + 1 == month && c.get(Calendar.YEAR) == year){
                             sum += record.amount
                         }
                     }
@@ -222,10 +226,10 @@ class FirebaseRealtime {
 
     fun getDonutCategories(userUID: String, type: String, callback: (MutableSet<String>) -> Unit) {
         val calendar = Calendar.getInstance()
-        val Month = calendar.get(Calendar.MONTH)
-        val Year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val year = calendar.get(Calendar.YEAR)
 
-        val reference = firebaseDatabase.child(userUID).child(type).orderByChild("date").endAt("${Month}/${Year}")
+        val reference = firebaseDatabase.child(userUID).child(type).orderByChild("date").endAt("${month}/${year}")
         val uniqueCatIds: MutableSet<String> = mutableSetOf()
 
         reference.addValueEventListener(object : ValueEventListener {
@@ -250,18 +254,18 @@ class FirebaseRealtime {
 
     fun getMonthRecordsFromCat(userUID: String, catId: String, type: String, callback: FirebaseRecordCallback) {
         val calendar = Calendar.getInstance()
-        val Month = calendar.get(Calendar.MONTH)
+        val month = calendar.get(Calendar.MONTH)
         val year = calendar.get(Calendar.YEAR)
 
         val reference = firebaseDatabase.child(userUID).child(type).orderByChild("categoryId").equalTo(catId)
 
         reference.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                var records = ArrayList<Record>()
+                val records = ArrayList<Record>()
                 for (result in snapshot.children) {
                     val record = result.getValue(Record::class.java)
                     if (record != null) {
-                        if (record.getCalendar().get(Calendar.MONTH) == Month && record.getCalendar().get(Calendar.YEAR) == year) {
+                        if (record.getCalendar().get(Calendar.MONTH) + 1 == month && record.getCalendar().get(Calendar.YEAR) == year) {
                             record.id = result.key.toString()
                             records.add(record)
                         }
@@ -373,8 +377,8 @@ class FirebaseRealtime {
 
     fun deleteCategory(userUID: String, cat: Category) {
 
-        val CatRef = firebaseDatabase.child(userUID).child("categories").child(cat.id)
-        CatRef.removeValue()
+        val catRef = firebaseDatabase.child(userUID).child("categories").child(cat.id)
+        catRef.removeValue()
     }
 
     fun deleteUser(userUID: String) {

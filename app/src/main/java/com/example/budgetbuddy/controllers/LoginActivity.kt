@@ -15,6 +15,13 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 
+/**
+ * Actividad para el inicio de sesión.
+ * Inicio con correo y contraseña.
+ * Inicio con Google.
+ * Registrate. -> SignInActivity
+ * He olvidado mi contraseña. -> ForgotPassActivity
+ */
 class LoginActivity : AppCompatActivity() {
     private val GOOGLE_SIGN_IN = 100
 
@@ -82,19 +89,21 @@ class LoginActivity : AppCompatActivity() {
         session()
     }
 
+    // Verifica que los EditText no estén vacíos
     private fun checkValues(): Boolean{
 
         if (txtEmail.text.isEmpty()){
-            txtEmail.setError(getString(R.string.required))
+            txtEmail.error = getString(R.string.required)
             return false
         }else if (txtPass.text.isEmpty()){
-            txtPass.setError(getString(R.string.required))
+            txtPass.error = getString(R.string.required)
             return false
         }else{
             return true
         }
     }
 
+    // Verifica que el usuario esté logueado, en cuyo caso se redirige a MainActivity
     private fun session(){
         if (Utils().getIsSignedIn(applicationContext)){
             toMainActivity()

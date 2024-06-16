@@ -35,6 +35,12 @@ import com.iamageo.library.position
 import com.iamageo.library.title
 import com.iamageo.library.type
 
+/**
+ * Actividad que muestra las categorías de la cuenta.
+ * Permite añadir una nueva categoría (botón "+").
+ * Permite eliminar una categoría que no tenga registros asociados (mantener pulsado sobre la categoría)
+ * Menú drawer para navegar entre las diferentes pantallas.
+ */
 class CategoriesActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, FirebaseRealtime.FirebaseCategoriesCallback {
 
     private lateinit var drawerLayout : DrawerLayout
@@ -68,6 +74,7 @@ class CategoriesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             navigationView.setCheckedItem(R.id.mb_home)
         }
 
+        //Al abrir el drawerLayout se carga la información del usuario
         drawerLayout.addDrawerListener(object : DrawerLayout.DrawerListener {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
 
@@ -81,7 +88,7 @@ class CategoriesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
                 txtDisplayEmail.text = currentUser?.email
 
                 val photoUrl: String = currentUser?.photoUrl.toString()
-                if (!photoUrl.isNullOrEmpty()) {
+                if (photoUrl.isNotEmpty()) {
                     Glide.with(applicationContext)
                         .load(photoUrl)
                         .placeholder(R.drawable.iconbg) // Imagen de marcador de posición mientras carga
@@ -106,6 +113,7 @@ class CategoriesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         return true
     }
 
+    //Lógica del botón para añadir una nueva categoría
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.btAddNewCategory -> {
@@ -156,6 +164,7 @@ class CategoriesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
         startActivity(i)
     }
 
+    //Callback con los datos de las categorías
     override fun onCategoriesLoaded(cats: ArrayList<Category>) {
         adapter = CategoriesAdapter(cats)
         adapter.onItemLongClick = { cat: Category, view: View ->
@@ -163,9 +172,9 @@ class CategoriesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
             popup.inflate(R.menu.menu_context_record)
             popup.setForceShowIcon(true)
 
-            popup.setOnMenuItemClickListener {
+            popup.setOnMenuItemClickListener { menuItem ->
 
-                when (it.itemId) {
+                when (menuItem.itemId) {
                     R.id.action_delete -> {
                         //Se abre el dialogo de confirmación de borrado
                         BeautifulDialog.build(this)
@@ -186,21 +195,14 @@ class CategoriesActivity : AppCompatActivity(), NavigationView.OnNavigationItemS
                                 }
                             }
                             .onNegative(text = getString(android.R.string.cancel)) {}
-
-                        true
                     }
 
-                    else -> true
                 }
                 true
             }
             popup.show()
         }
         recviewCat.adapter = adapter
-
-    }
-
-    private fun showDeleteConfirmationDialog() {
 
     }
 }
