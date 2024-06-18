@@ -208,8 +208,8 @@ class FirebaseRealtime {
 
                     if (record != null) {
                         val c = record.getCalendar()
-                        Log.d("month", c.get(Calendar.MONTH).toString() + "/" + c.get(Calendar.YEAR).toString())
-                        if (c.get(Calendar.MONTH) + 1 == month && c.get(Calendar.YEAR) == year){
+                        Log.d("month", c.get(Calendar.MONTH).toString() + "/" + c.get(Calendar.YEAR).toString() + "  " + month.toString())
+                        if (c.get(Calendar.MONTH) == month && c.get(Calendar.YEAR) == year){
                             sum += record.amount
                         }
                     }
@@ -265,7 +265,7 @@ class FirebaseRealtime {
                 for (result in snapshot.children) {
                     val record = result.getValue(Record::class.java)
                     if (record != null) {
-                        if (record.getCalendar().get(Calendar.MONTH) + 1 == month && record.getCalendar().get(Calendar.YEAR) == year) {
+                        if (record.getCalendar().get(Calendar.MONTH) == month && record.getCalendar().get(Calendar.YEAR) == year) {
                             record.id = result.key.toString()
                             records.add(record)
                         }
