@@ -229,7 +229,7 @@ class FirebaseRealtime {
         val month = calendar.get(Calendar.MONTH)
         val year = calendar.get(Calendar.YEAR)
 
-        val reference = firebaseDatabase.child(userUID).child(type).orderByChild("date").endAt("${month}/${year}")
+        val reference = firebaseDatabase.child(userUID).child(type).orderByChild("date").endAt("${month + 1}/${year}")
         val uniqueCatIds: MutableSet<String> = mutableSetOf()
 
         reference.addValueEventListener(object : ValueEventListener {
@@ -242,7 +242,7 @@ class FirebaseRealtime {
                         Log.d("catID", catID)
                     }
                 }
-                Log.d("uniqueCatIds", uniqueCatIds.size.toString())
+                Log.d("uniqueCatIds", uniqueCatIds.size.toString() + "   " + type)
                 callback(uniqueCatIds)
             }
 
